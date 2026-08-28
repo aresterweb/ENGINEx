@@ -1,7 +1,7 @@
 const SUPABASE_URL = "https://xruphwixbafbfqtpjqor.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_BUYtrhS1y1Y2vGLdeVFSqw_IKGnu7i-";
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://enginex-ls0ib1aeg-engine-x1.vercel.app/";
 
 
 const supabaseClient =
