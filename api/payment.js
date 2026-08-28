@@ -1,25 +1,18 @@
-const {
-    createClient
-} = require("@supabase/supabase-js");
-
+const { createClient } = require("@supabase/supabase-js");
 const crypto = require("crypto");
 
-
-const supabaseAdmin =
-    createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_SERVICE_ROLE_KEY,
-        {
-            auth: {
-                autoRefreshToken: false,
-                persistSession: false
-            }
+const supabaseAdmin = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
         }
-    );
-
+    }
+);
 
 const PLANS = {
-
     premium_monthly: {
         name: "Enginex Premium 1 Month",
         amount: 19900,
@@ -31,29 +24,79 @@ const PLANS = {
         amount: 149900,
         days: 365
     }
-
 };
 
+module.exports = async function handler(req, res) {
 
-module.exports = async function handler(
-    req,
-    res
-) {
+    /* =========================
+       CORS
+    ========================= */
+
+    res.setHeader(
+        "Access-Control-Allow-Origin",
+        "*"
+    );
+
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "POST, OPTIONS"
+    );
+
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization"
+    );
+
+    /* =========================
+       PREFLIGHT
+    ========================= */
+
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
 
     /* =========================
        ONLY POST
     ========================= */
 
     if (req.method !== "POST") {
-
         return res.status(405).json({
             message: "Method not allowed"
         });
-
     }
 
-
     try {
+
+        /* =========================
+           CHECK ENVIRONMENT
+        ========================= */
+
+        if (
+            !process.env.SUPABASE_URL ||
+            !process.env.SUPABASE_SERVICE_ROLE_KEY
+        ) {
+            console.error(
+                "Supabase environment variables missing."
+            );
+
+            return res.status(500).json({
+                message:
+                    "Server configuration error."
+            });
+        }
+
+        if (
+            !process.env.MIDTRANS_SERVER_KEY
+        ) {
+            console.error(
+                "Midtrans Server Key missing."
+            );
+
+            return res.status(500).json({
+                message:
+                    "Payment configuration error."
+            });
+        }
 
         /* =========================
            AUTHORIZATION
@@ -62,73 +105,56 @@ module.exports = async function handler(
         const authorization =
             req.headers.authorization || "";
 
-
         if (
-            !authorization.startsWith(
-                "Bearer "
-            )
+            !authorization.startsWith("Bearer ")
         ) {
-
             return res.status(401).json({
                 message:
                     "Authorization required"
             });
-
         }
-
 
         const accessToken =
             authorization.substring(7);
-
 
         const {
             data: userData,
             error: userError
         } =
-            await supabaseAdmin.auth
-                .getUser(accessToken);
-
+            await supabaseAdmin.auth.getUser(
+                accessToken
+            );
 
         if (
             userError ||
             !userData ||
             !userData.user
         ) {
-
             return res.status(401).json({
                 message:
                     "Invalid authentication"
             });
-
         }
-
 
         const user =
             userData.user;
-
 
         /* =========================
            PLAN
         ========================= */
 
-        const {
-            plan
-        } = req.body || {};
-
+        const plan =
+            req.body?.plan;
 
         const selectedPlan =
             PLANS[plan];
 
-
         if (!selectedPlan) {
-
             return res.status(400).json({
                 message:
                     "Premium plan tidak valid."
             });
-
         }
-
 
         /* =========================
            ORDER ID
@@ -143,7 +169,6 @@ module.exports = async function handler(
                 .toString("hex")
                 .toUpperCase();
 
-
         /* =========================
            SAVE PAYMENT
         ========================= */
@@ -154,7 +179,6 @@ module.exports = async function handler(
             await supabaseAdmin
                 .from("payments")
                 .insert({
-
                     user_id:
                         user.id,
 
@@ -169,9 +193,7 @@ module.exports = async function handler(
 
                     status:
                         "pending"
-
                 });
-
 
         if (insertError) {
 
@@ -184,12 +206,10 @@ module.exports = async function handler(
                 message:
                     "Gagal menyimpan transaksi."
             });
-
         }
 
-
         /* =========================
-           MIDTRANS
+           MIDTRANS MODE
         ========================= */
 
         const isProduction =
@@ -197,33 +217,35 @@ module.exports = async function handler(
                 .MIDTRANS_IS_PRODUCTION ===
             "true";
 
-
         const midtransUrl =
             isProduction
-
                 ? "https://app.midtrans.com/snap/v1/transactions"
-
                 : "https://app.sandbox.midtrans.com/snap/v1/transactions";
 
+        /* =========================
+           MIDTRANS AUTH
+        ========================= */
 
         const authorizationKey =
             Buffer
                 .from(
-                    process.env.MIDTRANS_SERVER_KEY +
+                    process.env
+                        .MIDTRANS_SERVER_KEY +
                     ":"
                 )
                 .toString("base64");
 
+        /* =========================
+           CREATE SNAP TRANSACTION
+        ========================= */
 
         const midtransResponse =
             await fetch(
                 midtransUrl,
                 {
-
                     method: "POST",
 
                     headers: {
-
                         "Accept":
                             "application/json",
 
@@ -233,26 +255,20 @@ module.exports = async function handler(
                         "Authorization":
                             "Basic " +
                             authorizationKey
-
                     },
 
                     body: JSON.stringify({
 
                         transaction_details: {
-
                             order_id:
                                 orderId,
 
                             gross_amount:
                                 selectedPlan.amount
-
                         },
 
-
                         item_details: [
-
                             {
-
                                 id:
                                     plan,
 
@@ -263,11 +279,8 @@ module.exports = async function handler(
 
                                 name:
                                     selectedPlan.name
-
                             }
-
                         ],
-
 
                         customer_details: {
 
@@ -280,25 +293,23 @@ module.exports = async function handler(
 
                             email:
                                 user.email
-
                         },
-
 
                         custom_field1:
                             user.id,
 
                         custom_field2:
                             plan
-
                     })
-
                 }
             );
-
 
         const result =
             await midtransResponse.json();
 
+        /* =========================
+           MIDTRANS ERROR
+        ========================= */
 
         if (!midtransResponse.ok) {
 
@@ -307,25 +318,22 @@ module.exports = async function handler(
                 result
             );
 
-
             await supabaseAdmin
                 .from("payments")
                 .update({
-                    status: "failed"
+                    status:
+                        "failed"
                 })
                 .eq(
                     "order_id",
                     orderId
                 );
 
-
             return res.status(500).json({
                 message:
                     "Midtrans gagal membuat pembayaran."
             });
-
         }
-
 
         /* =========================
            SUCCESS
@@ -341,9 +349,7 @@ module.exports = async function handler(
 
             order_id:
                 orderId
-
         });
-
 
     } catch (error) {
 
@@ -352,12 +358,9 @@ module.exports = async function handler(
             error
         );
 
-
         return res.status(500).json({
             message:
                 "Terjadi kesalahan pada server."
         });
-
     }
-
 };
