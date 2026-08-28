@@ -1,0 +1,11 @@
+{
+    "name": "Enginex Engineering Tools",
+    "short_name": "Enginex",
+    "description": "Engineering tools made simple.",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#21070b",
+    "theme_color": "#6f0d18",
+    "orientation": "portrait-primary",
+    "icons": []
+}

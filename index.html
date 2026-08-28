@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#6f0d18">
+    <meta name="description" content="Enginex - Engineering tools for everyone">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Enginex - Engineering Tools</title>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">E</div>
+        <div>
+            <strong>Enginex</strong>
+            <small>Engineering Tools</small>
+        </div>
+    </div>
+
+    <nav>
+        <button onclick="showPage('home')">Home</button>
+        <button onclick="showPage('tools')">Tools</button>
+        <button onclick="showPage('premium')">Premium</button>
+        <button id="dashboardNav" onclick="showPage('dashboard')" class="hidden">
+            Dashboard
+        </button>
+    </nav>
+
+    <div class="header-actions">
+        <button id="languageButton" class="small-button" onclick="toggleLanguage()">
+            EN
+        </button>
+
+        <button id="loginButton" class="primary-button" onclick="openAuth('login')">
+            Login
+        </button>
+
+        <button id="logoutButton" class="secondary-button hidden" onclick="logout()">
+            Logout
+        </button>
+    </div>
+</header>
+
+
+<main>
+
+<section id="homePage" class="page active">
+    <div class="hero">
+        <div class="hero-content">
+
+            <span class="badge">ENGINEERING PLATFORM</span>
+
+            <h1>
+                Engineering tools
+                <span>made simple.</span>
+            </h1>
+
+            <p>
+                Enginex membantu engineer, teknisi, pelajar,
+                dan profesional melakukan berbagai perhitungan
+                dengan cepat dan praktis.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="primary-button large" onclick="showPage('tools')">
+                    Explore Tools
+                </button>
+
+                <button class="outline-button large" onclick="showPage('premium')">
+                    Go Premium
+                </button>
+            </div>
+
+        </div>
+
+        <div class="hero-card">
+            <div class="card-glow"></div>
+
+            <div class="engineering-symbol">
+                ⚙
+            </div>
+
+            <h3>ENGINEX</h3>
+
+            <p>
+                Calculate. Analyze. Improve.
+            </p>
+        </div>
+    </div>
+
+    <div class="features">
+
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Fast</h3>
+            <p>Perhitungan cepat tanpa proses rumit.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🛠</div>
+            <h3>Practical</h3>
+            <p>Tools dibuat untuk kebutuhan nyata.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Secure</h3>
+            <p>Akun dan data pengguna dilindungi.</p>
+        </div>
+
+    </div>
+</section>
+
+
+<section id="toolsPage" class="page">
+
+    <div class="section-title">
+        <span class="badge">TOOLS</span>
+
+        <h2>Engineering Calculator</h2>
+
+        <p>
+            Pilih tools yang ingin digunakan.
+        </p>
+    </div>
+
+    <div class="tools-grid">
+
+        <div class="tool-card">
+            <div class="tool-icon">⏱</div>
+
+            <h3>Time Calculator</h3>
+
+            <p>
+                Hitung selisih waktu dengan mudah.
+            </p>
+
+            <button class="primary-button" onclick="openTool('time')">
+                Open Tool
+            </button>
+        </div>
+
+
+        <div class="tool-card">
+            <div class="tool-icon">⛽</div>
+
+            <h3>Fuel Calculator</h3>
+
+            <p>
+                Hitung konsumsi bahan bakar.
+            </p>
+
+            <button class="primary-button" onclick="openTool('fuel')">
+                Open Tool
+            </button>
+        </div>
+
+
+        <div class="tool-card premium-tool">
+            <div class="premium-label">PREMIUM</div>
+
+            <div class="tool-icon">⚙</div>
+
+            <h3>Advanced Engineering</h3>
+
+            <p>
+                Advanced engineering calculations.
+            </p>
+
+            <button class="primary-button" onclick="openTool('advanced')">
+                Open Tool
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section id="dashboardPage" class="page">
+
+    <div class="section-title">
+        <span class="badge">ACCOUNT</span>
+        <h2>Your Dashboard</h2>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+            <span>Account</span>
+            <strong id="userEmail">-</strong>
+        </div>
+
+        <div class="dashboard-card">
+            <span>Plan</span>
+            <strong id="userPlan">FREE</strong>
+        </div>
+
+        <div class="dashboard-card">
+            <span>Premium Until</span>
+            <strong id="premiumUntil">-</strong>
+        </div>
+
+    </div>
+
+    <div class="dashboard-card history-card">
+        <h3>Calculation History</h3>
+
+        <div id="historyList">
+            <p class="muted">
+                Login untuk melihat riwayat.
+            </p>
+        </div>
+    </div>
+
+</section>
+
+
+<section id="premiumPage" class="page">
+
+    <div class="section-title">
+        <span class="badge">PREMIUM</span>
+
+        <h2>Unlock Enginex Premium</h2>
+
+        <p>
+            Dapatkan akses ke tools dan fitur engineering tambahan.
+        </p>
+    </div>
+
+
+    <div class="pricing-grid">
+
+        <div class="pricing-card">
+            <h3>Free</h3>
+
+            <div class="price">
+                Rp0
+                <small>/selamanya</small>
+            </div>
+
+            <ul>
+                <li>✓ Basic tools</li>
+                <li>✓ Account</li>
+                <li>✓ Basic history</li>
+                <li>✕ Advanced tools</li>
+            </ul>
+
+            <button class="outline-button" disabled>
+                Current Plan
+            </button>
+        </div>
+
+
+        <div class="pricing-card featured">
+            <div class="popular">POPULAR</div>
+
+            <h3>Premium 1 Month</h3>
+
+            <div class="price">
+                Rp19.900
+                <small>/bulan</small>
+            </div>
+
+            <ul>
+                <li>✓ All basic tools</li>
+                <li>✓ Premium tools</li>
+                <li>✓ Calculation history</li>
+                <li>✓ Priority features</li>
+            </ul>
+
+            <button
+                class="primary-button full"
+                onclick="startPayment('premium_monthly')">
+                Upgrade
+            </button>
+        </div>
+
+
+        <div class="pricing-card">
+            <h3>Premium 1 Year</h3>
+
+            <div class="price">
+                Rp149.900
+                <small>/tahun</small>
+            </div>
+
+            <ul>
+                <li>✓ All premium tools</li>
+                <li>✓ Calculation history</li>
+                <li>✓ Save more</li>
+                <li>✓ Priority features</li>
+            </ul>
+
+            <button
+                class="primary-button full"
+                onclick="startPayment('premium_yearly')">
+                Upgrade
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section id="toolPage" class="page">
+
+    <div class="section-title">
+        <button class="back-button" onclick="showPage('tools')">
+            ← Back
+        </button>
+
+        <h2 id="toolTitle">Tool</h2>
+        <p id="toolDescription"></p>
+    </div>
+
+
+    <div class="calculator-card">
+
+        <div id="timeCalculator" class="calculator hidden">
+
+            <label>
+                Start Time
+                <input type="datetime-local" id="startTime">
+            </label>
+
+            <label>
+                End Time
+                <input type="datetime-local" id="endTime">
+            </label>
+
+            <button class="primary-button full" onclick="calculateTime()">
+                Calculate
+            </button>
+
+            <div id="timeResult" class="result-box">
+                Result will appear here.
+            </div>
+
+        </div>
+
+
+        <div id="fuelCalculator" class="calculator hidden">
+
+            <label>
+                Fuel Used (Liter)
+                <input type="number" id="fuelLiter" min="0" step="0.01">
+            </label>
+
+            <label>
+                Operating Hours
+                <input type="number" id="fuelHours" min="0" step="0.01">
+            </label>
+
+            <button class="primary-button full" onclick="calculateFuel()">
+                Calculate
+            </button>
+
+            <div id="fuelResult" class="result-box">
+                Result will appear here.
+            </div>
+
+        </div>
+
+
+        <div id="advancedCalculator" class="calculator hidden">
+
+            <div class="premium-lock">
+
+                <div class="lock-icon">🔒</div>
+
+                <h3>Premium Feature</h3>
+
+                <p>
+                    Tool ini tersedia untuk pengguna Premium.
+                </p>
+
+                <button class="primary-button" onclick="showPage('premium')">
+                    Upgrade Premium
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<div id="authModal" class="modal">
+
+    <div class="modal-content">
+
+        <button class="close-button" onclick="closeAuth()">
+            ×
+        </button>
+
+        <div id="loginForm">
+
+            <h2>Welcome Back</h2>
+
+            <p>Login ke akun Enginex.</p>
+
+            <label>
+                Email
+                <input type="email" id="loginEmail">
+            </label>
+
+            <label>
+                Password
+                <input type="password" id="loginPassword">
+            </label>
+
+            <button class="primary-button full" onclick="login()">
+                Login
+            </button>
+
+            <p class="form-switch">
+                Belum punya akun?
+                <button onclick="switchAuth('register')">
+                    Register
+                </button>
+            </p>
+
+        </div>
+
+
+        <div id="registerForm" class="hidden">
+
+            <h2>Create Account</h2>
+
+            <p>Buat akun Enginex baru.</p>
+
+            <label>
+                Nama
+                <input type="text" id="registerName">
+            </label>
+
+            <label>
+                Email
+                <input type="email" id="registerEmail">
+            </label>
+
+            <label>
+                Password
+                <input type="password" id="registerPassword">
+            </label>
+
+            <button class="primary-button full" onclick="register()">
+                Create Account
+            </button>
+
+            <p class="form-switch">
+                Sudah punya akun?
+                <button onclick="switchAuth('login')">
+                    Login
+                </button>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
