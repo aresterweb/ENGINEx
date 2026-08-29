@@ -15,7 +15,7 @@ const SUPABASE_ANON_KEY =
     "sb_publishable_BUYtrhS1y1Y2vGLdeVFSqw_IKGnu7i-";
 
 const BACKEND_URL =
-    "https://enginex-ls0ib1aeg-engine-x1.vercel.app";
+    "https://engin-ex.vercel.app";
 
 
 /* =========================================================
