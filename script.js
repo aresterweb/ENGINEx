@@ -757,10 +757,6 @@ function applyLanguage() {
     }
 
 
-    /*
-        Normal text
-    */
-
     document
         .querySelectorAll(
             "[data-i18n]"
@@ -786,10 +782,6 @@ function applyLanguage() {
         });
 
 
-    /*
-        Placeholder
-    */
-
     document
         .querySelectorAll(
             "[data-i18n-placeholder]"
@@ -814,10 +806,6 @@ function applyLanguage() {
 
         });
 
-
-    /*
-        Title attribute
-    */
 
     document
         .querySelectorAll(
@@ -861,18 +849,15 @@ function applyLanguage() {
 
 
     setText(
+
         "userPlan",
 
-        currentProfile?.plan === "premium"
+        isPremiumActive()
             ? t("premiumPlan")
             : t("free")
 
     );
 
-
-    /*
-        Refresh opened tool
-    */
 
     if (currentTool) {
 
@@ -1194,7 +1179,9 @@ async function loadProfile() {
 
     if (!currentUser) {
 
-        return;
+        currentProfile = null;
+
+        return null;
 
     }
 
@@ -1209,7 +1196,9 @@ async function loadProfile() {
 
                 .from("profiles")
 
-                .select("*")
+                .select(
+                    "id, full_name, plan, premium_until"
+                )
 
                 .eq(
                     "id",
@@ -1226,21 +1215,21 @@ async function loadProfile() {
                 error
             );
 
-            return;
+            return null;
 
         }
 
-
-        /*
-            Profile belum ada.
-            Kita tetap biarkan login berjalan.
-        */
 
         currentProfile =
             data || {
 
                 id:
                     currentUser.id,
+
+                full_name:
+                    currentUser
+                        .user_metadata
+                        ?.full_name || "",
 
                 plan:
                     "free",
@@ -1249,6 +1238,35 @@ async function loadProfile() {
                     null
 
             };
+
+
+        /*
+            Jika premium sudah kedaluwarsa,
+            frontend memperlakukannya sebagai FREE.
+        */
+
+        if (
+            currentProfile?.plan === "premium" &&
+            currentProfile?.premium_until
+        ) {
+
+            const expiry =
+                new Date(
+                    currentProfile.premium_until
+                );
+
+
+            if (
+                expiry.getTime() <=
+                Date.now()
+            ) {
+
+                currentProfile.plan =
+                    "free";
+
+            }
+
+        }
 
 
         setText(
@@ -1264,7 +1282,7 @@ async function loadProfile() {
 
             "userPlan",
 
-            currentProfile.plan === "premium"
+            isPremiumActive()
                 ? t("premiumPlan")
                 : t("free")
 
@@ -1284,7 +1302,16 @@ async function loadProfile() {
         );
 
 
+        console.log(
+            "Current profile:",
+            currentProfile
+        );
+
+
         await loadHistory();
+
+
+        return currentProfile;
 
     } catch (error) {
 
@@ -1293,7 +1320,68 @@ async function loadProfile() {
             error
         );
 
+        return null;
+
     }
+
+}
+
+
+/* =========================================================
+   17A. PREMIUM CHECK
+========================================================= */
+
+function isPremiumActive() {
+
+    if (
+        !currentProfile
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        currentProfile.plan !==
+        "premium"
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        !currentProfile.premium_until
+    ) {
+
+        return false;
+
+    }
+
+
+    const expiry =
+        new Date(
+            currentProfile.premium_until
+        );
+
+
+    if (
+        isNaN(
+            expiry.getTime()
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        expiry.getTime() >
+        Date.now()
+    );
 
 }
 
@@ -1523,10 +1611,6 @@ function showPage(page) {
     });
 
 
-    /*
-        Dashboard requires login
-    */
-
     if (
         page === "dashboard" &&
         !currentUser
@@ -1583,30 +1667,57 @@ function showPage(page) {
    21. OPEN TOOL
 ========================================================= */
 
-function openTool(type) {
+async function openTool(type) {
 
     currentTool =
         type;
 
 
     /*
-        Advanced requires Premium
+        Advanced selalu cek status Premium terbaru
+        dari database sebelum dibuka.
     */
 
     if (
-        type === "advanced" &&
-        currentProfile?.plan !== "premium"
+        type === "advanced"
     ) {
 
-        showToast(
-            t("premiumOnly")
-        );
+        if (
+            !currentUser
+        ) {
 
-        showPage(
-            "premium"
-        );
+            showToast(
+                t("loginFirst")
+            );
 
-        return;
+            openAuth(
+                "login"
+            );
+
+            return;
+
+        }
+
+
+        const premium =
+            await refreshPremiumStatus();
+
+
+        if (
+            !premium
+        ) {
+
+            showToast(
+                t("premiumOnly")
+            );
+
+            showPage(
+                "premium"
+            );
+
+            return;
+
+        }
 
     }
 
@@ -2054,12 +2165,6 @@ async function calculateFuel() {
    25. PREMIUM PAYMENT
 ========================================================= */
 
-/*
-    plan:
-    "monthly"
-    "yearly"
-*/
-
 async function buyPremium(plan) {
 
     if (
@@ -2113,10 +2218,6 @@ async function buyPremium(plan) {
 
     try {
 
-        /*
-            Ambil session terbaru Supabase.
-        */
-
         const {
             data:
             sessionData,
@@ -2156,13 +2257,6 @@ async function buyPremium(plan) {
         }
 
 
-        /*
-            PAYMENT API
-
-            IMPORTANT:
-            Selalu POST.
-        */
-
         const response =
             await fetch(
 
@@ -2200,11 +2294,6 @@ async function buyPremium(plan) {
 
             );
 
-
-        /*
-            Baca response aman meskipun backend
-            mengembalikan text/error HTML.
-        */
 
         const responseText =
             await response.text();
@@ -2261,10 +2350,6 @@ async function buyPremium(plan) {
         }
 
 
-        /*
-            Mendukung beberapa nama response backend.
-        */
-
         const snapToken =
             data.token ||
             data.snap_token ||
@@ -2278,10 +2363,6 @@ async function buyPremium(plan) {
             data.payment_url ||
             data.url;
 
-
-        /*
-            MIDTRANS SNAP
-        */
 
         if (
             snapToken &&
@@ -2314,13 +2395,13 @@ async function buyPremium(plan) {
                                 false;
 
 
-                            await refreshPremiumStatus();
+                            await waitForPremiumActivation();
 
                         },
 
 
                     onPending:
-                        function (
+                        async function (
                             result
                         ) {
 
@@ -2337,6 +2418,15 @@ async function buyPremium(plan) {
 
                             paymentProcessing =
                                 false;
+
+
+                            /*
+                                Virtual Account biasanya masuk
+                                pending terlebih dahulu lalu
+                                settlement setelah dibayar.
+                            */
+
+                            await waitForPremiumActivation();
 
                         },
 
@@ -2386,11 +2476,6 @@ async function buyPremium(plan) {
         }
 
 
-        /*
-            Jika backend mengembalikan URL
-            pembayaran.
-        */
-
         if (redirectUrl) {
 
             paymentProcessing =
@@ -2405,11 +2490,6 @@ async function buyPremium(plan) {
 
         }
 
-
-        /*
-            Kalau backend sukses tetapi token
-            tidak ada.
-        */
 
         console.error(
             "Payment response:",
@@ -2450,11 +2530,6 @@ async function buyPremium(plan) {
    26. PAYMENT ALIASES
 ========================================================= */
 
-/*
-    Agar HTML lama tetap bisa memakai
-    fungsi berbeda.
-*/
-
 function startPayment(plan) {
 
     return buyPremium(
@@ -2488,23 +2563,103 @@ function upgradePremium(plan) {
 
 async function refreshPremiumStatus() {
 
-    /*
-        Webhook payment mungkin membutuhkan
-        beberapa detik untuk memperbarui database.
+    if (
+        !currentUser
+    ) {
 
-        Kita refresh profile langsung.
-    */
+        return false;
+
+    }
+
 
     await loadProfile();
 
 
-    if (
-        currentProfile?.plan === "premium"
+    const premium =
+        isPremiumActive();
+
+
+    applyLanguage();
+
+
+    return premium;
+
+}
+
+
+/* =========================================================
+   27A. WAIT FOR PREMIUM ACTIVATION
+========================================================= */
+
+async function waitForPremiumActivation() {
+
+    const maxAttempts =
+        15;
+
+
+    for (
+        let attempt = 1;
+        attempt <= maxAttempts;
+        attempt++
     ) {
 
-        applyLanguage();
+        console.log(
+            `Checking Premium activation ${attempt}/${maxAttempts}`
+        );
+
+
+        const active =
+            await refreshPremiumStatus();
+
+
+        if (
+            active
+        ) {
+
+            showToast(
+
+                english
+
+                    ? "Premium activated successfully!"
+
+                    : "Premium berhasil diaktifkan!"
+
+            );
+
+
+            showPage(
+                "dashboard"
+            );
+
+
+            return true;
+
+        }
+
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    2000
+                )
+        );
 
     }
+
+
+    showToast(
+
+        english
+
+            ? "Payment succeeded. Premium is still being activated. Please refresh shortly."
+
+            : "Pembayaran berhasil. Premium sedang diaktifkan. Silakan refresh sebentar lagi."
+
+    );
+
+
+    return false;
 
 }
 
@@ -2751,11 +2906,6 @@ function showToast(message) {
         );
 
 
-    /*
-        Kalau HTML belum punya toast,
-        script akan membuatnya sendiri.
-    */
-
     if (!toast) {
 
         toast =
@@ -2901,6 +3051,44 @@ document.addEventListener(
 
     }
 
+);
+
+
+/* =========================================================
+   36. AUTO REFRESH PREMIUM WHEN RETURNING TO WEBSITE
+========================================================= */
+
+window.addEventListener(
+    "focus",
+    async () => {
+
+        if (
+            currentUser
+        ) {
+
+            await refreshPremiumStatus();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "visibilitychange",
+    async () => {
+
+        if (
+            document.visibilityState ===
+            "visible" &&
+            currentUser
+        ) {
+
+            await refreshPremiumStatus();
+
+        }
+
+    }
 );
 
 
