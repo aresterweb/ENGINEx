@@ -1,7 +1,7 @@
 /* =========================================================
    ENGINEX - MAIN SCRIPT
-   Complete Version
-   ========================================================= */
+   Complete Version + Premium Engineering Tools
+========================================================= */
 
 
 /* =========================================================
@@ -39,6 +39,8 @@ let currentProfile = null;
 
 let currentTool = null;
 
+let currentPremiumTool = null;
+
 let paymentProcessing = false;
 
 
@@ -48,7 +50,9 @@ let paymentProcessing = false;
 */
 
 let english =
-    localStorage.getItem("enginex_language") === "en";
+    localStorage.getItem(
+        "enginex_language"
+    ) === "en";
 
 
 /* =========================================================
@@ -99,38 +103,56 @@ const translations = {
 
         yearlyPrice: "Rp149.900",
 
-        buyMonthly: "Beli Premium 1 Bulan",
+        buyMonthly:
+            "Beli Premium 1 Bulan",
 
-        buyYearly: "Beli Premium 1 Tahun",
+        buyYearly:
+            "Beli Premium 1 Tahun",
 
-        timeCalculator: "Kalkulator Waktu",
+        timeCalculator:
+            "Kalkulator Waktu",
 
-        fuelCalculator: "Kalkulator Bahan Bakar",
+        fuelCalculator:
+            "Kalkulator Bahan Bakar",
 
         advancedEngineering:
             "Engineering Lanjutan",
 
-        calculate: "Hitung",
+        calculate:
+            "Hitung",
 
-        startTime: "Waktu Mulai",
+        back:
+            "Kembali",
 
-        endTime: "Waktu Selesai",
+        startTime:
+            "Waktu Mulai",
 
-        fuel: "Bahan Bakar",
+        endTime:
+            "Waktu Selesai",
 
-        hours: "Jam",
+        fuel:
+            "Bahan Bakar",
 
-        liters: "Liter",
+        hours:
+            "Jam",
 
-        result: "Hasil",
+        liters:
+            "Liter",
 
-        duration: "Durasi",
+        result:
+            "Hasil",
 
-        consumption: "Konsumsi",
+        duration:
+            "Durasi",
 
-        free: "FREE",
+        consumption:
+            "Konsumsi",
 
-        premiumPlan: "PREMIUM",
+        free:
+            "FREE",
+
+        premiumPlan:
+            "PREMIUM",
 
         premiumUntil:
             "Premium sampai",
@@ -253,7 +275,164 @@ const translations = {
             "Total jam",
 
         totalFuel:
-            "Total bahan bakar"
+            "Total bahan bakar",
+
+
+        /* =============================================
+           PREMIUM TOOLS
+        ============================================== */
+
+        premiumActive:
+            "PREMIUM AKTIF",
+
+        premiumToolsDescription:
+            "Gunakan tools engineering Premium ENGINEX.",
+
+
+        enginePower:
+            "Engine Power",
+
+        enginePowerDescription:
+            "Hitung daya mesin berdasarkan torque dan RPM.",
+
+        torque:
+            "Torque",
+
+        rpm:
+            "RPM",
+
+        enginePowerResult:
+            "Daya Mesin",
+
+
+        sfocCalculator:
+            "SFOC Calculator",
+
+        sfocDescription:
+            "Hitung Specific Fuel Oil Consumption mesin.",
+
+        fuelMass:
+            "Massa Bahan Bakar",
+
+        enginePowerInput:
+            "Daya Mesin",
+
+        operatingTime:
+            "Waktu Operasi",
+
+        sfocResult:
+            "SFOC",
+
+
+        shaftPower:
+            "Shaft Power",
+
+        shaftPowerDescription:
+            "Hitung daya poros berdasarkan torque dan RPM.",
+
+        shaftPowerResult:
+            "Daya Poros",
+
+
+        propellerSlip:
+            "Propeller Slip",
+
+        propellerSlipDescription:
+            "Hitung slip propeller berdasarkan pitch, RPM, dan kecepatan kapal.",
+
+        propellerPitch:
+            "Pitch Propeller",
+
+        propellerRPM:
+            "RPM Propeller",
+
+        actualSpeed:
+            "Kecepatan Aktual Kapal",
+
+        theoreticalSpeed:
+            "Kecepatan Teoritis",
+
+        propellerSlipResult:
+            "Propeller Slip",
+
+
+        compressionRatio:
+            "Compression Ratio",
+
+        compressionRatioDescription:
+            "Hitung rasio kompresi dari swept volume dan clearance volume.",
+
+        sweptVolume:
+            "Swept Volume",
+
+        clearanceVolume:
+            "Clearance Volume",
+
+        compressionRatioResult:
+            "Rasio Kompresi",
+
+
+        cylinderVolume:
+            "Cylinder Volume",
+
+        cylinderVolumeDescription:
+            "Hitung total displacement mesin dari bore, stroke, dan jumlah silinder.",
+
+        bore:
+            "Diameter Bore",
+
+        stroke:
+            "Stroke",
+
+        cylinders:
+            "Jumlah Silinder",
+
+        cylinderVolumeResult:
+            "Total Displacement",
+
+
+        pumpCapacity:
+            "Pump Capacity",
+
+        pumpCapacityDescription:
+            "Hitung kapasitas pompa dari volume fluida dan waktu.",
+
+        pumpedVolume:
+            "Volume Fluida",
+
+        pumpingTime:
+            "Waktu Pemompaan",
+
+        pumpCapacityResult:
+            "Kapasitas Pompa",
+
+
+        marineConverter:
+            "Marine Unit Converter",
+
+        marineConverterDescription:
+            "Konversi unit teknik marine engineering.",
+
+        conversionValue:
+            "Nilai",
+
+        fromUnit:
+            "Dari Unit",
+
+        toUnit:
+            "Ke Unit",
+
+        conversionResult:
+            "Hasil Konversi",
+
+        incompatibleUnits:
+            "Unit tidak dapat dikonversi karena berbeda kategori.",
+
+        premiumChecking:
+            "Memeriksa status Premium...",
+
+        premiumAccessActive:
+            "Akses Premium aktif."
 
     },
 
@@ -278,7 +457,8 @@ const translations = {
 
         loginTitle: "Login",
 
-        registerTitle: "Create Account",
+        registerTitle:
+            "Create Account",
 
         email: "Email",
 
@@ -288,17 +468,23 @@ const translations = {
 
         loginButton: "Login",
 
-        registerButton: "Register",
+        registerButton:
+            "Register",
 
-        upgrade: "Upgrade Premium",
+        upgrade:
+            "Upgrade Premium",
 
-        monthly: "Premium 1 Month",
+        monthly:
+            "Premium 1 Month",
 
-        yearly: "Premium 1 Year",
+        yearly:
+            "Premium 1 Year",
 
-        monthlyPrice: "$1.30",
+        monthlyPrice:
+            "$1.30",
 
-        yearlyPrice: "$9.90",
+        yearlyPrice:
+            "$9.90",
 
         buyMonthly:
             "Buy Premium 1 Month",
@@ -317,6 +503,9 @@ const translations = {
 
         calculate:
             "Calculate",
+
+        back:
+            "Back",
 
         startTime:
             "Start Time",
@@ -469,7 +658,164 @@ const translations = {
             "Total hours",
 
         totalFuel:
-            "Total fuel"
+            "Total fuel",
+
+
+        /* =============================================
+           PREMIUM TOOLS
+        ============================================== */
+
+        premiumActive:
+            "PREMIUM ACTIVE",
+
+        premiumToolsDescription:
+            "Use ENGINEX Premium engineering tools.",
+
+
+        enginePower:
+            "Engine Power",
+
+        enginePowerDescription:
+            "Calculate engine power from torque and RPM.",
+
+        torque:
+            "Torque",
+
+        rpm:
+            "RPM",
+
+        enginePowerResult:
+            "Engine Power",
+
+
+        sfocCalculator:
+            "SFOC Calculator",
+
+        sfocDescription:
+            "Calculate Specific Fuel Oil Consumption.",
+
+        fuelMass:
+            "Fuel Mass",
+
+        enginePowerInput:
+            "Engine Power",
+
+        operatingTime:
+            "Operating Time",
+
+        sfocResult:
+            "SFOC",
+
+
+        shaftPower:
+            "Shaft Power",
+
+        shaftPowerDescription:
+            "Calculate shaft power from torque and RPM.",
+
+        shaftPowerResult:
+            "Shaft Power",
+
+
+        propellerSlip:
+            "Propeller Slip",
+
+        propellerSlipDescription:
+            "Calculate propeller slip from pitch, RPM and vessel speed.",
+
+        propellerPitch:
+            "Propeller Pitch",
+
+        propellerRPM:
+            "Propeller RPM",
+
+        actualSpeed:
+            "Actual Vessel Speed",
+
+        theoreticalSpeed:
+            "Theoretical Speed",
+
+        propellerSlipResult:
+            "Propeller Slip",
+
+
+        compressionRatio:
+            "Compression Ratio",
+
+        compressionRatioDescription:
+            "Calculate compression ratio from swept and clearance volume.",
+
+        sweptVolume:
+            "Swept Volume",
+
+        clearanceVolume:
+            "Clearance Volume",
+
+        compressionRatioResult:
+            "Compression Ratio",
+
+
+        cylinderVolume:
+            "Cylinder Volume",
+
+        cylinderVolumeDescription:
+            "Calculate total engine displacement from bore, stroke and cylinders.",
+
+        bore:
+            "Cylinder Bore",
+
+        stroke:
+            "Stroke",
+
+        cylinders:
+            "Number of Cylinders",
+
+        cylinderVolumeResult:
+            "Total Displacement",
+
+
+        pumpCapacity:
+            "Pump Capacity",
+
+        pumpCapacityDescription:
+            "Calculate pump capacity from fluid volume and pumping time.",
+
+        pumpedVolume:
+            "Fluid Volume",
+
+        pumpingTime:
+            "Pumping Time",
+
+        pumpCapacityResult:
+            "Pump Capacity",
+
+
+        marineConverter:
+            "Marine Unit Converter",
+
+        marineConverterDescription:
+            "Convert common marine engineering units.",
+
+        conversionValue:
+            "Value",
+
+        fromUnit:
+            "From Unit",
+
+        toUnit:
+            "To Unit",
+
+        conversionResult:
+            "Conversion Result",
+
+        incompatibleUnits:
+            "Units cannot be converted because they belong to different categories.",
+
+        premiumChecking:
+            "Checking Premium status...",
+
+        premiumAccessActive:
+            "Premium access active."
 
     }
 
@@ -699,7 +1045,8 @@ async function updateUI() {
 
 function toggleLanguage() {
 
-    english = !english;
+    english =
+        !english;
 
 
     localStorage.setItem(
@@ -1240,11 +1587,6 @@ async function loadProfile() {
             };
 
 
-        /*
-            Jika premium sudah kedaluwarsa,
-            frontend memperlakukannya sebagai FREE.
-        */
-
         if (
             currentProfile?.plan === "premium" &&
             currentProfile?.premium_until
@@ -1302,12 +1644,6 @@ async function loadProfile() {
         );
 
 
-        console.log(
-            "Current profile:",
-            currentProfile
-        );
-
-
         await loadHistory();
 
 
@@ -1333,9 +1669,7 @@ async function loadProfile() {
 
 function isPremiumActive() {
 
-    if (
-        !currentProfile
-    ) {
+    if (!currentProfile) {
 
         return false;
 
@@ -1642,8 +1976,7 @@ function showPage(page) {
 
         top: 0,
 
-        behavior:
-            "smooth"
+        behavior: "smooth"
 
     });
 
@@ -1673,18 +2006,11 @@ async function openTool(type) {
         type;
 
 
-    /*
-        Advanced selalu cek status Premium terbaru
-        dari database sebelum dibuka.
-    */
-
     if (
         type === "advanced"
     ) {
 
-        if (
-            !currentUser
-        ) {
+        if (!currentUser) {
 
             showToast(
                 t("loginFirst")
@@ -1703,9 +2029,7 @@ async function openTool(type) {
             await refreshPremiumStatus();
 
 
-        if (
-            !premium
-        ) {
+        if (!premium) {
 
             showToast(
                 t("premiumOnly")
@@ -1778,6 +2102,9 @@ async function openTool(type) {
             )
             ?.classList
             .remove("hidden");
+
+
+        showPremiumToolsMenu();
 
     }
 
@@ -1890,7 +2217,6 @@ async function calculateTime() {
             "endTime"
         );
 
-
     const resultElement =
         document.getElementById(
             "timeResult"
@@ -1968,15 +2294,13 @@ async function calculateTime() {
 
     const totalMinutes =
         Math.floor(
-            milliseconds /
-            60000
+            milliseconds / 60000
         );
 
 
     const days =
         Math.floor(
-            totalMinutes /
-            1440
+            totalMinutes / 1440
         );
 
 
@@ -2001,10 +2325,10 @@ async function calculateTime() {
 
     const resultText =
         english
-            ?
-            `${days} day(s), ${hours} hour(s), ${minutes} minute(s) — ${totalHours.toFixed(2)} hours`
-            :
-            `${days} hari, ${hours} jam, ${minutes} menit — ${totalHours.toFixed(2)} jam`;
+
+            ? `${days} day(s), ${hours} hour(s), ${minutes} minute(s) — ${totalHours.toFixed(2)} hours`
+
+            : `${days} hari, ${hours} jam, ${minutes} menit — ${totalHours.toFixed(2)} jam`;
 
 
     if (resultElement) {
@@ -2119,10 +2443,8 @@ async function calculateFuel() {
 
     const resultText =
         english
-            ?
-            `${average.toFixed(2)} liters/hour`
-            :
-            `${average.toFixed(2)} liter/jam`;
+            ? `${average.toFixed(2)} liters/hour`
+            : `${average.toFixed(2)} liter/jam`;
 
 
     if (resultElement) {
@@ -2167,18 +2489,14 @@ async function calculateFuel() {
 
 async function buyPremium(plan) {
 
-    if (
-        paymentProcessing
-    ) {
+    if (paymentProcessing) {
 
         return;
 
     }
 
 
-    if (
-        !currentUser
-    ) {
+    if (!currentUser) {
 
         showToast(
             t("loginFirst")
@@ -2420,12 +2738,6 @@ async function buyPremium(plan) {
                                 false;
 
 
-                            /*
-                                Virtual Account biasanya masuk
-                                pending terlebih dahulu lalu
-                                settlement setelah dibayar.
-                            */
-
                             await waitForPremiumActivation();
 
                         },
@@ -2489,12 +2801,6 @@ async function buyPremium(plan) {
             return;
 
         }
-
-
-        console.error(
-            "Payment response:",
-            data
-        );
 
 
         showToast(
@@ -2563,9 +2869,7 @@ function upgradePremium(plan) {
 
 async function refreshPremiumStatus() {
 
-    if (
-        !currentUser
-    ) {
+    if (!currentUser) {
 
         return false;
 
@@ -2603,18 +2907,11 @@ async function waitForPremiumActivation() {
         attempt++
     ) {
 
-        console.log(
-            `Checking Premium activation ${attempt}/${maxAttempts}`
-        );
-
-
         const active =
             await refreshPremiumStatus();
 
 
-        if (
-            active
-        ) {
+        if (active) {
 
             showToast(
 
@@ -2679,10 +2976,6 @@ function openAuth(
 
 
     if (!modal) {
-
-        console.warn(
-            "authModal not found"
-        );
 
         return;
 
@@ -2768,7 +3061,9 @@ function switchAuth(mode) {
             ?.classList
             .remove("hidden");
 
-    } else {
+    }
+
+    else {
 
         registerForm
             ?.classList
@@ -2805,7 +3100,9 @@ function formatDate(value) {
 
 
     if (
-        isNaN(date.getTime())
+        isNaN(
+            date.getTime()
+        )
     ) {
 
         return "-";
@@ -2918,43 +3215,6 @@ function showToast(message) {
             "toast";
 
 
-        toast.style.position =
-            "fixed";
-
-        toast.style.bottom =
-            "24px";
-
-        toast.style.left =
-            "50%";
-
-        toast.style.transform =
-            "translateX(-50%)";
-
-        toast.style.zIndex =
-            "99999";
-
-        toast.style.background =
-            "#222";
-
-        toast.style.color =
-            "#fff";
-
-        toast.style.padding =
-            "12px 18px";
-
-        toast.style.borderRadius =
-            "10px";
-
-        toast.style.maxWidth =
-            "90%";
-
-        toast.style.textAlign =
-            "center";
-
-        toast.style.display =
-            "none";
-
-
         document.body.appendChild(
             toast
         );
@@ -3042,7 +3302,8 @@ document.addEventListener(
     event => {
 
         if (
-            event.key === "Escape"
+            event.key ===
+            "Escape"
         ) {
 
             closeAuth();
@@ -3055,16 +3316,14 @@ document.addEventListener(
 
 
 /* =========================================================
-   36. AUTO REFRESH PREMIUM WHEN RETURNING TO WEBSITE
+   36. AUTO REFRESH PREMIUM
 ========================================================= */
 
 window.addEventListener(
     "focus",
     async () => {
 
-        if (
-            currentUser
-        ) {
+        if (currentUser) {
 
             await refreshPremiumStatus();
 
@@ -3090,6 +3349,1455 @@ document.addEventListener(
 
     }
 );
+
+
+/* =========================================================
+   37. PREMIUM TOOL MENU
+========================================================= */
+
+function showPremiumToolsMenu() {
+
+    currentPremiumTool =
+        null;
+
+
+    const menu =
+        document.getElementById(
+            "premiumToolsMenu"
+        );
+
+
+    if (menu) {
+
+        menu.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".premium-tool-panel"
+        )
+        .forEach(panel => {
+
+            panel.classList.add(
+                "hidden"
+            );
+
+        });
+
+
+    applyLanguage();
+
+}
+
+
+/* =========================================================
+   38. OPEN PREMIUM TOOL
+========================================================= */
+
+async function openPremiumCalculator(
+    type
+) {
+
+    if (!currentUser) {
+
+        showToast(
+            t("loginFirst")
+        );
+
+        return;
+
+    }
+
+
+    const premium =
+        await refreshPremiumStatus();
+
+
+    if (!premium) {
+
+        showToast(
+            t("premiumOnly")
+        );
+
+        showPage(
+            "premium"
+        );
+
+        return;
+
+    }
+
+
+    const panels = {
+
+        enginePower:
+            "enginePowerPanel",
+
+        sfoc:
+            "sfocPanel",
+
+        shaftPower:
+            "shaftPowerPanel",
+
+        propellerSlip:
+            "propellerSlipPanel",
+
+        compressionRatio:
+            "compressionRatioPanel",
+
+        cylinderVolume:
+            "cylinderVolumePanel",
+
+        pumpCapacity:
+            "pumpCapacityPanel",
+
+        unitConverter:
+            "unitConverterPanel"
+
+    };
+
+
+    const panelId =
+        panels[type];
+
+
+    if (!panelId) {
+
+        return;
+
+    }
+
+
+    currentPremiumTool =
+        type;
+
+
+    document
+        .getElementById(
+            "premiumToolsMenu"
+        )
+        ?.classList
+        .add(
+            "hidden"
+        );
+
+
+    document
+        .querySelectorAll(
+            ".premium-tool-panel"
+        )
+        .forEach(panel => {
+
+            panel.classList.add(
+                "hidden"
+            );
+
+        });
+
+
+    document
+        .getElementById(
+            panelId
+        )
+        ?.classList
+        .remove(
+            "hidden"
+        );
+
+
+    applyLanguage();
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior:
+            "smooth"
+
+    });
+
+}
+
+
+/* =========================================================
+   39. BACK TO PREMIUM MENU
+========================================================= */
+
+function backToPremiumTools() {
+
+    showPremiumToolsMenu();
+
+}
+
+
+/* =========================================================
+   40. ENGINE POWER CALCULATOR
+========================================================= */
+
+/*
+    Formula:
+
+    P(kW) =
+    2 × PI × RPM × Torque
+    ---------------------
+       60 × 1000
+
+    Equivalent:
+    P(kW) = Torque × RPM / 9549.2966
+
+    Torque = Nm
+*/
+
+async function calculateEnginePower() {
+
+    const torque =
+        Number(
+            document
+                .getElementById(
+                    "engineTorque"
+                )
+                ?.value
+        );
+
+
+    const rpm =
+        Number(
+            document
+                .getElementById(
+                    "engineRPM"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(torque) ||
+        !Number.isFinite(rpm) ||
+        torque <= 0 ||
+        rpm <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const powerKW =
+
+        (
+            2 *
+            Math.PI *
+            rpm *
+            torque
+        ) /
+        (
+            60 *
+            1000
+        );
+
+
+    const powerHP =
+        powerKW *
+        1.34102209;
+
+
+    const result =
+
+        `${powerKW.toFixed(2)} kW | ${powerHP.toFixed(2)} HP`;
+
+
+    setText(
+        "enginePowerResult",
+        result
+    );
+
+
+    await saveCalculation(
+
+        "Engine Power",
+
+        {
+
+            torque_nm:
+                torque,
+
+            rpm:
+                rpm
+
+        },
+
+        {
+
+            power_kw:
+                Number(
+                    powerKW.toFixed(2)
+                ),
+
+            power_hp:
+                Number(
+                    powerHP.toFixed(2)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   41. SFOC CALCULATOR
+========================================================= */
+
+/*
+    SFOC =
+    Fuel mass (g)
+    ---------------------------
+    Power (kW) × Time (hour)
+
+    Input fuel = kg
+    Output = g/kWh
+*/
+
+async function calculateSFOC() {
+
+    const fuelMass =
+        Number(
+            document
+                .getElementById(
+                    "sfocFuelMass"
+                )
+                ?.value
+        );
+
+
+    const power =
+        Number(
+            document
+                .getElementById(
+                    "sfocPower"
+                )
+                ?.value
+        );
+
+
+    const time =
+        Number(
+            document
+                .getElementById(
+                    "sfocHours"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(fuelMass) ||
+        !Number.isFinite(power) ||
+        !Number.isFinite(time) ||
+        fuelMass <= 0 ||
+        power <= 0 ||
+        time <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const sfoc =
+
+        (
+            fuelMass *
+            1000
+        ) /
+        (
+            power *
+            time
+        );
+
+
+    setText(
+
+        "sfocResult",
+
+        `${sfoc.toFixed(2)} g/kWh`
+
+    );
+
+
+    await saveCalculation(
+
+        "SFOC Calculator",
+
+        {
+
+            fuel_mass_kg:
+                fuelMass,
+
+            power_kw:
+                power,
+
+            operating_hours:
+                time
+
+        },
+
+        {
+
+            sfoc_g_kwh:
+                Number(
+                    sfoc.toFixed(2)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   42. SHAFT POWER CALCULATOR
+========================================================= */
+
+async function calculateShaftPower() {
+
+    const torque =
+        Number(
+            document
+                .getElementById(
+                    "shaftTorque"
+                )
+                ?.value
+        );
+
+
+    const rpm =
+        Number(
+            document
+                .getElementById(
+                    "shaftRPM"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(torque) ||
+        !Number.isFinite(rpm) ||
+        torque <= 0 ||
+        rpm <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const powerKW =
+
+        (
+            2 *
+            Math.PI *
+            rpm *
+            torque
+        ) /
+        (
+            60 *
+            1000
+        );
+
+
+    const powerHP =
+        powerKW *
+        1.34102209;
+
+
+    setText(
+
+        "shaftPowerResult",
+
+        `${powerKW.toFixed(2)} kW | ${powerHP.toFixed(2)} HP`
+
+    );
+
+
+    await saveCalculation(
+
+        "Shaft Power",
+
+        {
+
+            torque_nm:
+                torque,
+
+            rpm:
+                rpm
+
+        },
+
+        {
+
+            shaft_power_kw:
+                Number(
+                    powerKW.toFixed(2)
+                ),
+
+            shaft_power_hp:
+                Number(
+                    powerHP.toFixed(2)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   43. PROPELLER SLIP CALCULATOR
+========================================================= */
+
+/*
+    Pitch = meter / revolution
+
+    Theoretical distance/hour:
+    Pitch × RPM × 60
+
+    knots =
+    meters/hour / 1852
+
+    Slip =
+    (theoretical - actual)
+    ----------------------
+        theoretical
+    × 100
+*/
+
+async function calculatePropellerSlip() {
+
+    const pitch =
+        Number(
+            document
+                .getElementById(
+                    "propellerPitch"
+                )
+                ?.value
+        );
+
+
+    const rpm =
+        Number(
+            document
+                .getElementById(
+                    "propellerRPM"
+                )
+                ?.value
+        );
+
+
+    const actualSpeed =
+        Number(
+            document
+                .getElementById(
+                    "vesselSpeed"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(pitch) ||
+        !Number.isFinite(rpm) ||
+        !Number.isFinite(actualSpeed) ||
+        pitch <= 0 ||
+        rpm <= 0 ||
+        actualSpeed < 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const theoreticalSpeed =
+
+        (
+            pitch *
+            rpm *
+            60
+        ) /
+        1852;
+
+
+    const slip =
+
+        (
+            (
+                theoreticalSpeed -
+                actualSpeed
+            ) /
+            theoreticalSpeed
+        ) *
+        100;
+
+
+    const result =
+
+        `${slip.toFixed(2)} % | ${t("theoreticalSpeed")}: ${theoreticalSpeed.toFixed(2)} knot`;
+
+
+    setText(
+        "propellerSlipResult",
+        result
+    );
+
+
+    await saveCalculation(
+
+        "Propeller Slip",
+
+        {
+
+            pitch_meter:
+                pitch,
+
+            propeller_rpm:
+                rpm,
+
+            actual_speed_knots:
+                actualSpeed
+
+        },
+
+        {
+
+            theoretical_speed_knots:
+                Number(
+                    theoreticalSpeed.toFixed(2)
+                ),
+
+            slip_percent:
+                Number(
+                    slip.toFixed(2)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   44. COMPRESSION RATIO
+========================================================= */
+
+/*
+    CR =
+    Swept Volume + Clearance Volume
+    -------------------------------
+          Clearance Volume
+*/
+
+async function calculateCompressionRatio() {
+
+    const swept =
+        Number(
+            document
+                .getElementById(
+                    "sweptVolume"
+                )
+                ?.value
+        );
+
+
+    const clearance =
+        Number(
+            document
+                .getElementById(
+                    "clearanceVolume"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(swept) ||
+        !Number.isFinite(clearance) ||
+        swept <= 0 ||
+        clearance <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const ratio =
+
+        (
+            swept +
+            clearance
+        ) /
+        clearance;
+
+
+    setText(
+
+        "compressionRatioResult",
+
+        `${ratio.toFixed(2)} : 1`
+
+    );
+
+
+    await saveCalculation(
+
+        "Compression Ratio",
+
+        {
+
+            swept_volume:
+                swept,
+
+            clearance_volume:
+                clearance
+
+        },
+
+        {
+
+            compression_ratio:
+                Number(
+                    ratio.toFixed(2)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   45. CYLINDER VOLUME
+========================================================= */
+
+/*
+    Bore = mm
+    Stroke = mm
+
+    One cylinder volume:
+    PI/4 × bore² × stroke
+
+    mm³ → liter:
+    divide by 1,000,000
+*/
+
+async function calculateCylinderVolume() {
+
+    const bore =
+        Number(
+            document
+                .getElementById(
+                    "cylinderBore"
+                )
+                ?.value
+        );
+
+
+    const stroke =
+        Number(
+            document
+                .getElementById(
+                    "cylinderStroke"
+                )
+                ?.value
+        );
+
+
+    const cylinders =
+        Number(
+            document
+                .getElementById(
+                    "cylinderCount"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(bore) ||
+        !Number.isFinite(stroke) ||
+        !Number.isFinite(cylinders) ||
+        bore <= 0 ||
+        stroke <= 0 ||
+        cylinders <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const oneCylinderMM3 =
+
+        (
+            Math.PI /
+            4
+        ) *
+        Math.pow(
+            bore,
+            2
+        ) *
+        stroke;
+
+
+    const oneCylinderLiter =
+        oneCylinderMM3 /
+        1000000;
+
+
+    const totalLiter =
+        oneCylinderLiter *
+        cylinders;
+
+
+    const totalM3 =
+        totalLiter /
+        1000;
+
+
+    setText(
+
+        "cylinderVolumeResult",
+
+        `${totalLiter.toFixed(2)} L | ${totalM3.toFixed(4)} m³`
+
+    );
+
+
+    await saveCalculation(
+
+        "Cylinder Volume",
+
+        {
+
+            bore_mm:
+                bore,
+
+            stroke_mm:
+                stroke,
+
+            cylinders:
+                cylinders
+
+        },
+
+        {
+
+            one_cylinder_liter:
+                Number(
+                    oneCylinderLiter.toFixed(2)
+                ),
+
+            total_liter:
+                Number(
+                    totalLiter.toFixed(2)
+                ),
+
+            total_m3:
+                Number(
+                    totalM3.toFixed(4)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   46. PUMP CAPACITY
+========================================================= */
+
+/*
+    Input:
+    Volume = Liter
+    Time = Minute
+
+    Output:
+    L/min
+    L/hour
+    m³/hour
+*/
+
+async function calculatePumpCapacity() {
+
+    const volume =
+        Number(
+            document
+                .getElementById(
+                    "pumpVolume"
+                )
+                ?.value
+        );
+
+
+    const minutes =
+        Number(
+            document
+                .getElementById(
+                    "pumpMinutes"
+                )
+                ?.value
+        );
+
+
+    if (
+        !Number.isFinite(volume) ||
+        !Number.isFinite(minutes) ||
+        volume <= 0 ||
+        minutes <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const litersPerMinute =
+        volume /
+        minutes;
+
+
+    const litersPerHour =
+        litersPerMinute *
+        60;
+
+
+    const cubicMeterPerHour =
+        litersPerHour /
+        1000;
+
+
+    const result =
+
+        `${litersPerMinute.toFixed(2)} L/min | ${cubicMeterPerHour.toFixed(3)} m³/h`;
+
+
+    setText(
+        "pumpCapacityResult",
+        result
+    );
+
+
+    await saveCalculation(
+
+        "Pump Capacity",
+
+        {
+
+            volume_liter:
+                volume,
+
+            time_minutes:
+                minutes
+
+        },
+
+        {
+
+            liters_per_minute:
+                Number(
+                    litersPerMinute.toFixed(2)
+                ),
+
+            liters_per_hour:
+                Number(
+                    litersPerHour.toFixed(2)
+                ),
+
+            cubic_meter_per_hour:
+                Number(
+                    cubicMeterPerHour.toFixed(3)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   47. MARINE UNIT CONVERTER
+========================================================= */
+
+const unitDefinitions = {
+
+    /* POWER */
+
+    kw: {
+
+        category:
+            "power",
+
+        toBase:
+            value => value,
+
+        fromBase:
+            value => value
+
+    },
+
+
+    hp: {
+
+        category:
+            "power",
+
+        toBase:
+            value =>
+                value *
+                0.745699872,
+
+        fromBase:
+            value =>
+                value /
+                0.745699872
+
+    },
+
+
+    ps: {
+
+        category:
+            "power",
+
+        toBase:
+            value =>
+                value *
+                0.73549875,
+
+        fromBase:
+            value =>
+                value /
+                0.73549875
+
+    },
+
+
+    /* PRESSURE */
+
+    bar: {
+
+        category:
+            "pressure",
+
+        toBase:
+            value => value,
+
+        fromBase:
+            value => value
+
+    },
+
+
+    psi: {
+
+        category:
+            "pressure",
+
+        toBase:
+            value =>
+                value *
+                0.0689475729,
+
+        fromBase:
+            value =>
+                value /
+                0.0689475729
+
+    },
+
+
+    kpa: {
+
+        category:
+            "pressure",
+
+        toBase:
+            value =>
+                value /
+                100,
+
+        fromBase:
+            value =>
+                value *
+                100
+
+    },
+
+
+    mpa: {
+
+        category:
+            "pressure",
+
+        toBase:
+            value =>
+                value *
+                10,
+
+        fromBase:
+            value =>
+                value /
+                10
+
+    },
+
+
+    /* VOLUME */
+
+    liter: {
+
+        category:
+            "volume",
+
+        toBase:
+            value => value,
+
+        fromBase:
+            value => value
+
+    },
+
+
+    m3: {
+
+        category:
+            "volume",
+
+        toBase:
+            value =>
+                value *
+                1000,
+
+        fromBase:
+            value =>
+                value /
+                1000
+
+    },
+
+
+    gallon_us: {
+
+        category:
+            "volume",
+
+        toBase:
+            value =>
+                value *
+                3.785411784,
+
+        fromBase:
+            value =>
+                value /
+                3.785411784
+
+    },
+
+
+    /* SPEED */
+
+    knot: {
+
+        category:
+            "speed",
+
+        toBase:
+            value => value,
+
+        fromBase:
+            value => value
+
+    },
+
+
+    kmh: {
+
+        category:
+            "speed",
+
+        toBase:
+            value =>
+                value /
+                1.852,
+
+        fromBase:
+            value =>
+                value *
+                1.852
+
+    },
+
+
+    ms: {
+
+        category:
+            "speed",
+
+        toBase:
+            value =>
+                value *
+                1.94384449,
+
+        fromBase:
+            value =>
+                value /
+                1.94384449
+
+    }
+
+};
+
+
+/* =========================================================
+   48. CONVERT MARINE UNIT
+========================================================= */
+
+async function convertMarineUnit() {
+
+    const value =
+        Number(
+            document
+                .getElementById(
+                    "converterValue"
+                )
+                ?.value
+        );
+
+
+    const fromUnit =
+        document
+            .getElementById(
+                "converterFrom"
+            )
+            ?.value;
+
+
+    const toUnit =
+        document
+            .getElementById(
+                "converterTo"
+            )
+            ?.value;
+
+
+    if (
+        !Number.isFinite(value) ||
+        !fromUnit ||
+        !toUnit
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const fromDefinition =
+        unitDefinitions[
+            fromUnit
+        ];
+
+
+    const toDefinition =
+        unitDefinitions[
+            toUnit
+        ];
+
+
+    if (
+        !fromDefinition ||
+        !toDefinition
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    if (
+        fromDefinition.category !==
+        toDefinition.category
+    ) {
+
+        showToast(
+            t("incompatibleUnits")
+        );
+
+        return;
+
+    }
+
+
+    const baseValue =
+        fromDefinition
+            .toBase(
+                value
+            );
+
+
+    const converted =
+        toDefinition
+            .fromBase(
+                baseValue
+            );
+
+
+    setText(
+
+        "converterResult",
+
+        `${converted.toFixed(4)} ${getUnitLabel(toUnit)}`
+
+    );
+
+
+    await saveCalculation(
+
+        "Marine Unit Converter",
+
+        {
+
+            value:
+                value,
+
+            from:
+                fromUnit,
+
+            to:
+                toUnit
+
+        },
+
+        {
+
+            converted_value:
+                Number(
+                    converted.toFixed(4)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   49. UNIT LABEL
+========================================================= */
+
+function getUnitLabel(unit) {
+
+    const labels = {
+
+        kw:
+            "kW",
+
+        hp:
+            "HP",
+
+        ps:
+            "PS",
+
+        bar:
+            "bar",
+
+        psi:
+            "psi",
+
+        kpa:
+            "kPa",
+
+        mpa:
+            "MPa",
+
+        liter:
+            "L",
+
+        m3:
+            "m³",
+
+        gallon_us:
+            "US gal",
+
+        knot:
+            "knot",
+
+        kmh:
+            "km/h",
+
+        ms:
+            "m/s"
+
+    };
+
+
+    return (
+        labels[unit] ||
+        unit
+    );
+
+}
 
 
 /* =========================================================
