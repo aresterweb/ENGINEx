@@ -49,11 +49,48 @@ async function handler(
 
 
     /* =====================================================
+       CORS
+    ===================================================== */
+
+    res.setHeader(
+        "Access-Control-Allow-Origin",
+        "*"
+    );
+
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "POST, OPTIONS"
+    );
+
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type"
+    );
+
+
+    /* =====================================================
+       PREFLIGHT
+    ===================================================== */
+
+    if (
+        req.method ===
+        "OPTIONS"
+    ) {
+
+        return res
+            .status(200)
+            .end();
+
+    }
+
+
+    /* =====================================================
        ONLY POST
     ===================================================== */
 
     if (
-        req.method !== "POST"
+        req.method !==
+        "POST"
     ) {
 
         return res
@@ -72,8 +109,52 @@ async function handler(
 
 
         /* =================================================
-           CHECK SERVER KEY
+           CHECK ENVIRONMENT
         ================================================= */
+
+        if (
+            !process.env
+                .SUPABASE_URL
+        ) {
+
+            console.error(
+                "SUPABASE_URL missing."
+            );
+
+
+            return res
+                .status(500)
+                .json({
+
+                    message:
+                        "Supabase URL not configured."
+
+                });
+
+        }
+
+
+        if (
+            !process.env
+                .SUPABASE_SERVICE_ROLE_KEY
+        ) {
+
+            console.error(
+                "SUPABASE_SERVICE_ROLE_KEY missing."
+            );
+
+
+            return res
+                .status(500)
+                .json({
+
+                    message:
+                        "Supabase service role key not configured."
+
+                });
+
+        }
+
 
         if (
             !process.env
@@ -90,7 +171,7 @@ async function handler(
                 .json({
 
                     message:
-                        "Server configuration error."
+                        "Midtrans server key not configured."
 
                 });
 
@@ -102,17 +183,47 @@ async function handler(
            READ BODY
         ================================================= */
 
-        const body =
-            typeof req.body ===
-            "string"
-
-                ? JSON.parse(
-                    req.body
-                )
-
-                : req.body || {};
+        let body = {};
 
 
+        try {
+
+            body =
+                typeof req.body ===
+                "string"
+
+                    ? JSON.parse(
+                        req.body
+                    )
+
+                    : req.body || {};
+
+        } catch (
+            parseError
+        ) {
+
+            console.error(
+                "Invalid webhook JSON:",
+                parseError
+            );
+
+
+            return res
+                .status(400)
+                .json({
+
+                    message:
+                        "Invalid JSON body."
+
+                });
+
+        }
+
+
+
+        /* =================================================
+           READ MIDTRANS DATA
+        ================================================= */
 
         const orderId =
             body.order_id;
@@ -140,7 +251,58 @@ async function handler(
 
 
         /* =================================================
-           VALIDATE BASIC DATA
+           MIDTRANS DASHBOARD TEST NOTIFICATION
+        ================================================= */
+
+        /*
+            Saat tombol "Tes URL notifikasi"
+            di dashboard Midtrans ditekan,
+            Midtrans membuat Order ID seperti:
+
+            payment_notif_test_Mxxxxx_...
+
+            Order ini memang tidak ada
+            di database payments.
+
+            Jadi kita cukup membalas HTTP 200
+            agar Midtrans mengetahui endpoint
+            webhook dapat dijangkau.
+        */
+
+        if (
+            orderId &&
+            orderId.startsWith(
+                "payment_notif_test_"
+            )
+        ) {
+
+            console.log(
+                "Midtrans notification URL test received:",
+                orderId
+            );
+
+
+            return res
+                .status(200)
+                .json({
+
+                    success:
+                        true,
+
+                    test:
+                        true,
+
+                    message:
+                        "Midtrans notification test received."
+
+                });
+
+        }
+
+
+
+        /* =================================================
+           VALIDATE REQUIRED DATA
         ================================================= */
 
         if (
@@ -150,6 +312,12 @@ async function handler(
             !transactionStatus ||
             !signatureKey
         ) {
+
+            console.error(
+                "Incomplete Midtrans notification:",
+                body
+            );
+
 
             return res
                 .status(400)
@@ -170,14 +338,22 @@ async function handler(
 
         const rawSignature =
 
-            orderId +
+            String(
+                orderId
+            ) +
 
-            statusCode +
+            String(
+                statusCode
+            ) +
 
-            grossAmount +
+            String(
+                grossAmount
+            ) +
 
-            process.env
-                .MIDTRANS_SERVER_KEY;
+            String(
+                process.env
+                    .MIDTRANS_SERVER_KEY
+            );
 
 
         const expectedSignature =
@@ -197,10 +373,36 @@ async function handler(
                 );
 
 
-        const validSignature =
+        const receivedSignature =
+            String(
+                signatureKey
+            );
 
-            expectedSignature.length ===
-            signatureKey.length &&
+
+        if (
+            expectedSignature.length !==
+            receivedSignature.length
+        ) {
+
+            console.error(
+                "Midtrans signature length mismatch:",
+                orderId
+            );
+
+
+            return res
+                .status(401)
+                .json({
+
+                    message:
+                        "Invalid signature."
+
+                });
+
+        }
+
+
+        const signatureValid =
 
             crypto.timingSafeEqual(
 
@@ -209,13 +411,15 @@ async function handler(
                 ),
 
                 Buffer.from(
-                    signatureKey
+                    receivedSignature
                 )
 
             );
 
 
-        if (!validSignature) {
+        if (
+            !signatureValid
+        ) {
 
             console.error(
                 "Invalid Midtrans signature:",
@@ -241,8 +445,12 @@ async function handler(
         ================================================= */
 
         const {
-            data: payment,
-            error: paymentError
+            data:
+            payment,
+
+            error:
+            paymentError
+
         } =
 
             await supabaseAdmin
@@ -264,14 +472,34 @@ async function handler(
 
 
         if (
-            paymentError ||
+            paymentError
+        ) {
+
+            console.error(
+                "Payment lookup error:",
+                paymentError
+            );
+
+
+            return res
+                .status(500)
+                .json({
+
+                    message:
+                        "Unable to read payment."
+
+                });
+
+        }
+
+
+        if (
             !payment
         ) {
 
             console.error(
                 "Payment not found:",
-                orderId,
-                paymentError
+                orderId
             );
 
 
@@ -289,10 +517,11 @@ async function handler(
 
 
         /* =================================================
-           VERIFY AMOUNT
+           VERIFY PAYMENT AMOUNT
         ================================================= */
 
         const paidAmount =
+
             Math.round(
                 Number(
                     grossAmount
@@ -300,16 +529,35 @@ async function handler(
             );
 
 
-        if (
-            paidAmount !==
+        const expectedAmount =
+
             Number(
                 payment.amount
-            )
+            );
+
+
+        if (
+            !Number.isFinite(
+                paidAmount
+            ) ||
+            paidAmount !==
+            expectedAmount
         ) {
 
             console.error(
                 "Payment amount mismatch:",
-                orderId
+                {
+
+                    orderId:
+                        orderId,
+
+                    expected:
+                        expectedAmount,
+
+                    received:
+                        grossAmount
+
+                }
             );
 
 
@@ -327,16 +575,21 @@ async function handler(
 
 
         /* =================================================
-           DETERMINE STATUS
+           MAP MIDTRANS STATUS
         ================================================= */
 
         let paymentStatus =
             "pending";
 
 
-        let activatePremium =
+        let shouldActivatePremium =
             false;
 
+
+
+        /* =================================================
+           SETTLEMENT
+        ================================================= */
 
         if (
             transactionStatus ===
@@ -346,24 +599,21 @@ async function handler(
             paymentStatus =
                 "paid";
 
-            activatePremium =
+            shouldActivatePremium =
                 true;
 
         }
 
 
+
+        /* =================================================
+           CAPTURE
+        ================================================= */
+
         else if (
             transactionStatus ===
             "capture"
         ) {
-
-            /*
-                Untuk kartu kredit.
-
-                Capture hanya dianggap berhasil
-                jika fraud_status = accept
-                atau fraud_status tidak diberikan.
-            */
 
             if (
                 !fraudStatus ||
@@ -374,10 +624,12 @@ async function handler(
                 paymentStatus =
                     "paid";
 
-                activatePremium =
+                shouldActivatePremium =
                     true;
 
-            } else {
+            }
+
+            else {
 
                 paymentStatus =
                     "challenge";
@@ -386,6 +638,11 @@ async function handler(
 
         }
 
+
+
+        /* =================================================
+           PENDING
+        ================================================= */
 
         else if (
             transactionStatus ===
@@ -398,6 +655,11 @@ async function handler(
         }
 
 
+
+        /* =================================================
+           DENY
+        ================================================= */
+
         else if (
             transactionStatus ===
             "deny"
@@ -408,6 +670,11 @@ async function handler(
 
         }
 
+
+
+        /* =================================================
+           CANCEL
+        ================================================= */
 
         else if (
             transactionStatus ===
@@ -420,6 +687,11 @@ async function handler(
         }
 
 
+
+        /* =================================================
+           EXPIRE
+        ================================================= */
+
         else if (
             transactionStatus ===
             "expire"
@@ -431,6 +703,11 @@ async function handler(
         }
 
 
+
+        /* =================================================
+           FAILURE
+        ================================================= */
+
         else if (
             transactionStatus ===
             "failure"
@@ -441,6 +718,11 @@ async function handler(
 
         }
 
+
+
+        /* =================================================
+           REFUND
+        ================================================= */
 
         else if (
             transactionStatus ===
@@ -457,14 +739,27 @@ async function handler(
 
 
         /* =================================================
-           ACTIVATE PREMIUM ATOMICALLY
+           ACTIVATE PREMIUM
         ================================================= */
 
-        if (activatePremium) {
+        if (
+            shouldActivatePremium
+        ) {
+
+            /*
+                Fungsi database ini harus sudah dibuat
+                lewat SQL sebelumnya:
+
+                activate_enginex_payment()
+            */
 
             const {
-                data,
-                error
+                data:
+                activationData,
+
+                error:
+                activationError
+
             } =
 
                 await supabaseAdmin
@@ -488,11 +783,13 @@ async function handler(
                     );
 
 
-            if (error) {
+            if (
+                activationError
+            ) {
 
                 console.error(
                     "Premium activation error:",
-                    error
+                    activationError
                 );
 
 
@@ -508,6 +805,23 @@ async function handler(
             }
 
 
+            console.log(
+                "Premium activated:",
+                {
+
+                    orderId:
+                        orderId,
+
+                    userId:
+                        payment.user_id,
+
+                    activation:
+                        activationData
+
+                }
+            );
+
+
             return res
                 .status(200)
                 .json({
@@ -518,8 +832,11 @@ async function handler(
                     status:
                         "paid",
 
+                    premium:
+                        true,
+
                     activation:
-                        data
+                        activationData
 
                 });
 
@@ -528,12 +845,13 @@ async function handler(
 
 
         /* =================================================
-           UPDATE NON-PAID STATUS
+           UPDATE NON-SUCCESS STATUS
         ================================================= */
 
         const {
             error:
             updateError
+
         } =
 
             await supabaseAdmin
@@ -574,10 +892,12 @@ async function handler(
                 );
 
 
-        if (updateError) {
+        if (
+            updateError
+        ) {
 
             console.error(
-                "Payment update error:",
+                "Payment status update failed:",
                 updateError
             );
 
@@ -587,12 +907,33 @@ async function handler(
                 .json({
 
                     message:
-                        "Unable to update payment."
+                        "Unable to update payment status."
 
                 });
 
         }
 
+
+
+        /* =================================================
+           SUCCESS RESPONSE
+        ================================================= */
+
+        console.log(
+            "Midtrans webhook processed:",
+            {
+
+                orderId:
+                    orderId,
+
+                transactionStatus:
+                    transactionStatus,
+
+                paymentStatus:
+                    paymentStatus
+
+            }
+        );
 
 
         return res
@@ -602,16 +943,29 @@ async function handler(
                 success:
                     true,
 
+                order_id:
+                    orderId,
+
+                transaction_status:
+                    transactionStatus,
+
                 status:
                     paymentStatus
 
             });
 
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
+
+
+        /* =================================================
+           UNKNOWN ERROR
+        ================================================= */
 
         console.error(
-            "Webhook error:",
+            "Midtrans webhook error:",
             error
         );
 
