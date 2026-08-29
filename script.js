@@ -1,10 +1,12 @@
 /* =========================================================
    ENGINEX - MAIN SCRIPT
+   Complete Version
    ========================================================= */
 
-/* =========================
-   CONFIGURATION
-========================= */
+
+/* =========================================================
+   1. CONFIGURATION
+========================================================= */
 
 const SUPABASE_URL =
     "https://xruphwixbafbfqtpjqor.supabase.co";
@@ -12,16 +14,13 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
     "sb_publishable_BUYtrhS1y1Y2vGLdeVFSqw_IKGnu7i-";
 
-/*
-   Backend Vercel
-*/
 const BACKEND_URL =
     "https://enginex-ls0ib1aeg-engine-x1.vercel.app";
 
 
-/* =========================
-   SUPABASE
-========================= */
+/* =========================================================
+   2. SUPABASE CLIENT
+========================================================= */
 
 const supabaseClient =
     window.supabase.createClient(
@@ -30,27 +29,31 @@ const supabaseClient =
     );
 
 
-/* =========================
-   GLOBAL STATE
-========================= */
+/* =========================================================
+   3. GLOBAL STATE
+========================================================= */
 
 let currentUser = null;
+
 let currentProfile = null;
+
+let currentTool = null;
+
+let paymentProcessing = false;
 
 
 /*
-   Default language:
-   false = Indonesia
-   true  = English
+    false = Indonesia
+    true  = English
 */
 
 let english =
     localStorage.getItem("enginex_language") === "en";
 
 
-/* =========================
-   TRANSLATIONS
-========================= */
+/* =========================================================
+   4. TRANSLATIONS
+========================================================= */
 
 const translations = {
 
@@ -58,51 +61,91 @@ const translations = {
 
         language: "EN",
 
-        login: "Login",
-        logout: "Logout",
-        register: "Daftar",
-        dashboard: "Dashboard",
-        premium: "Premium",
         home: "Beranda",
+
         tools: "Tools",
 
+        dashboard: "Dashboard",
+
+        premium: "Premium",
+
+        login: "Login",
+
+        logout: "Logout",
+
+        register: "Daftar",
+
         loginTitle: "Login",
+
         registerTitle: "Buat Akun",
 
         email: "Email",
+
         password: "Password",
+
         name: "Nama",
 
         loginButton: "Login",
+
         registerButton: "Daftar",
 
         upgrade: "Upgrade Premium",
 
         monthly: "Premium 1 Bulan",
+
         yearly: "Premium 1 Tahun",
 
         monthlyPrice: "Rp19.900",
+
         yearlyPrice: "Rp149.900",
 
-        timeCalculator: "Time Calculator",
-        fuelCalculator: "Fuel Calculator",
-        advancedEngineering: "Advanced Engineering",
+        buyMonthly: "Beli Premium 1 Bulan",
+
+        buyYearly: "Beli Premium 1 Tahun",
+
+        timeCalculator: "Kalkulator Waktu",
+
+        fuelCalculator: "Kalkulator Bahan Bakar",
+
+        advancedEngineering:
+            "Engineering Lanjutan",
 
         calculate: "Hitung",
 
         startTime: "Waktu Mulai",
+
         endTime: "Waktu Selesai",
 
         fuel: "Bahan Bakar",
+
         hours: "Jam",
 
+        liters: "Liter",
+
+        result: "Hasil",
+
+        duration: "Durasi",
+
+        consumption: "Konsumsi",
+
         free: "FREE",
+
         premiumPlan: "PREMIUM",
 
-        premiumUntil: "Premium sampai",
+        premiumUntil:
+            "Premium sampai",
 
-        noHistory: "Belum ada perhitungan.",
-        historyError: "Tidak dapat memuat riwayat.",
+        account:
+            "Akun",
+
+        history:
+            "Riwayat",
+
+        noHistory:
+            "Belum ada perhitungan.",
+
+        historyError:
+            "Tidak dapat memuat riwayat.",
 
         preparingPayment:
             "Mempersiapkan pembayaran...",
@@ -171,7 +214,46 @@ const translations = {
             "English mode aktif.",
 
         indonesiaMode:
-            "Mode Bahasa Indonesia aktif."
+            "Mode Bahasa Indonesia aktif.",
+
+        timeDescription:
+            "Hitung durasi antara dua waktu.",
+
+        fuelDescription:
+            "Hitung konsumsi bahan bakar rata-rata.",
+
+        advancedDescription:
+            "Fitur engineering lanjutan untuk pengguna Premium.",
+
+        premiumOnly:
+            "Fitur ini hanya tersedia untuk pengguna Premium.",
+
+        alreadyPremium:
+            "Akun Anda sudah Premium.",
+
+        profileError:
+            "Tidak dapat memuat profil.",
+
+        sessionError:
+            "Tidak dapat memuat sesi login.",
+
+        networkError:
+            "Gagal terhubung ke server.",
+
+        paymentOpened:
+            "Halaman pembayaran dibuka.",
+
+        unknownError:
+            "Terjadi kesalahan.",
+
+        averageFuel:
+            "Rata-rata konsumsi bahan bakar",
+
+        totalHours:
+            "Total jam",
+
+        totalFuel:
+            "Total bahan bakar"
 
     },
 
@@ -180,51 +262,106 @@ const translations = {
 
         language: "ID",
 
-        login: "Login",
-        logout: "Logout",
-        register: "Register",
-        dashboard: "Dashboard",
-        premium: "Premium",
         home: "Home",
+
         tools: "Tools",
 
+        dashboard: "Dashboard",
+
+        premium: "Premium",
+
+        login: "Login",
+
+        logout: "Logout",
+
+        register: "Register",
+
         loginTitle: "Login",
+
         registerTitle: "Create Account",
 
         email: "Email",
+
         password: "Password",
+
         name: "Name",
 
         loginButton: "Login",
+
         registerButton: "Register",
 
         upgrade: "Upgrade Premium",
 
         monthly: "Premium 1 Month",
+
         yearly: "Premium 1 Year",
 
         monthlyPrice: "$1.30",
+
         yearlyPrice: "$9.90",
 
-        timeCalculator: "Time Calculator",
-        fuelCalculator: "Fuel Calculator",
-        advancedEngineering: "Advanced Engineering",
+        buyMonthly:
+            "Buy Premium 1 Month",
 
-        calculate: "Calculate",
+        buyYearly:
+            "Buy Premium 1 Year",
 
-        startTime: "Start Time",
-        endTime: "End Time",
+        timeCalculator:
+            "Time Calculator",
 
-        fuel: "Fuel",
-        hours: "Hours",
+        fuelCalculator:
+            "Fuel Calculator",
 
-        free: "FREE",
-        premiumPlan: "PREMIUM",
+        advancedEngineering:
+            "Advanced Engineering",
 
-        premiumUntil: "Premium until",
+        calculate:
+            "Calculate",
 
-        noHistory: "No calculations yet.",
-        historyError: "Unable to load history.",
+        startTime:
+            "Start Time",
+
+        endTime:
+            "End Time",
+
+        fuel:
+            "Fuel",
+
+        hours:
+            "Hours",
+
+        liters:
+            "Liters",
+
+        result:
+            "Result",
+
+        duration:
+            "Duration",
+
+        consumption:
+            "Consumption",
+
+        free:
+            "FREE",
+
+        premiumPlan:
+            "PREMIUM",
+
+        premiumUntil:
+            "Premium until",
+
+        account:
+            "Account",
+
+        history:
+            "History",
+
+        noHistory:
+            "No calculations yet.",
+
+        historyError:
+            "Unable to load history.",
 
         preparingPayment:
             "Preparing payment...",
@@ -293,32 +430,74 @@ const translations = {
             "English mode enabled.",
 
         indonesiaMode:
-            "Indonesian mode enabled."
+            "Indonesian mode enabled.",
+
+        timeDescription:
+            "Calculate the duration between two times.",
+
+        fuelDescription:
+            "Calculate average fuel consumption.",
+
+        advancedDescription:
+            "Advanced engineering features for Premium users.",
+
+        premiumOnly:
+            "This feature is available for Premium users only.",
+
+        alreadyPremium:
+            "Your account is already Premium.",
+
+        profileError:
+            "Unable to load profile.",
+
+        sessionError:
+            "Unable to load login session.",
+
+        networkError:
+            "Unable to connect to server.",
+
+        paymentOpened:
+            "Payment page opened.",
+
+        unknownError:
+            "An error occurred.",
+
+        averageFuel:
+            "Average fuel consumption",
+
+        totalHours:
+            "Total hours",
+
+        totalFuel:
+            "Total fuel"
 
     }
 
 };
 
 
-/* =========================
-   LANGUAGE HELPER
-========================= */
+/* =========================================================
+   5. LANGUAGE HELPER
+========================================================= */
 
 function t(key) {
 
     const language =
-        english ? "en" : "id";
+        english
+            ? "en"
+            : "id";
 
     return (
-        translations[language][key] ||
+        translations[language]?.[key] ??
         key
     );
+
 }
 
 
-/* =========================
-   INITIALIZATION
-========================= */
+/* =========================================================
+   6. INITIALIZATION
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -328,35 +507,55 @@ document.addEventListener(
 
         await loadSession();
 
-        if ("serviceWorker" in navigator) {
-
-            try {
-
-                await navigator.serviceWorker.register(
-                    "sw.js"
-                );
-
-            } catch (error) {
-
-                console.log(
-                    "Service worker:",
-                    error
-                );
-
-            }
-
-        }
+        registerServiceWorker();
 
     }
 );
 
 
-/* =========================
-   AUTH STATE
-========================= */
+/* =========================================================
+   7. SERVICE WORKER
+========================================================= */
+
+async function registerServiceWorker() {
+
+    if (
+        !("serviceWorker" in navigator)
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await navigator.serviceWorker.register(
+            "/sw.js"
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Service worker error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   8. AUTH STATE CHANGE
+========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
+
+    async (
+        event,
+        session
+    ) => {
 
         currentUser =
             session?.user || null;
@@ -364,41 +563,60 @@ supabaseClient.auth.onAuthStateChange(
         await updateUI();
 
     }
+
 );
 
 
-/* =========================
-   SESSION
-========================= */
+/* =========================================================
+   9. LOAD SESSION
+========================================================= */
 
 async function loadSession() {
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth.getSession();
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .getSession();
 
 
-    if (error) {
+        if (error) {
 
-        console.error(error);
+            console.error(error);
 
-        return;
+            showToast(
+                t("sessionError")
+            );
+
+            return;
+
+        }
+
+
+        currentUser =
+            data.session?.user || null;
+
+
+        await updateUI();
+
+    } catch (error) {
+
+        console.error(
+            "Session error:",
+            error
+        );
+
     }
 
-
-    currentUser =
-        data.session?.user || null;
-
-
-    await updateUI();
 }
 
 
-/* =========================
-   UI UPDATE
-========================= */
+/* =========================================================
+   10. UPDATE UI
+========================================================= */
 
 async function updateUI() {
 
@@ -420,74 +638,64 @@ async function updateUI() {
 
     if (currentUser) {
 
-        if (loginButton) {
+        loginButton
+            ?.classList
+            .add("hidden");
 
-            loginButton.classList.add(
-                "hidden"
-            );
+        logoutButton
+            ?.classList
+            .remove("hidden");
 
-        }
-
-
-        if (logoutButton) {
-
-            logoutButton.classList.remove(
-                "hidden"
-            );
-
-        }
-
-
-        if (dashboardNav) {
-
-            dashboardNav.classList.remove(
-                "hidden"
-            );
-
-        }
+        dashboardNav
+            ?.classList
+            .remove("hidden");
 
 
         await loadProfile();
 
     } else {
 
-        if (loginButton) {
+        loginButton
+            ?.classList
+            .remove("hidden");
 
-            loginButton.classList.remove(
-                "hidden"
-            );
+        logoutButton
+            ?.classList
+            .add("hidden");
 
-        }
-
-
-        if (logoutButton) {
-
-            logoutButton.classList.add(
-                "hidden"
-            );
-
-        }
-
-
-        if (dashboardNav) {
-
-            dashboardNav.classList.add(
-                "hidden"
-            );
-
-        }
+        dashboardNav
+            ?.classList
+            .add("hidden");
 
 
         currentProfile = null;
 
+        setText(
+            "userEmail",
+            "-"
+        );
+
+        setText(
+            "userPlan",
+            t("free")
+        );
+
+        setText(
+            "premiumUntil",
+            "-"
+        );
+
     }
+
+
+    applyLanguage();
 
 }
 
 
-/* =========================
-   LANGUAGE
-========================= */
+/* =========================================================
+   11. LANGUAGE SWITCH
+========================================================= */
 
 function toggleLanguage() {
 
@@ -495,8 +703,13 @@ function toggleLanguage() {
 
 
     localStorage.setItem(
+
         "enginex_language",
-        english ? "en" : "id"
+
+        english
+            ? "en"
+            : "id"
+
     );
 
 
@@ -504,22 +717,26 @@ function toggleLanguage() {
 
 
     showToast(
+
         english
             ? t("englishMode")
             : t("indonesiaMode")
+
     );
 
 }
 
 
-/* =========================
-   APPLY LANGUAGE
-========================= */
+/* =========================================================
+   12. APPLY LANGUAGE
+========================================================= */
 
 function applyLanguage() {
 
     const language =
-        english ? "en" : "id";
+        english
+            ? "en"
+            : "id";
 
 
     document.documentElement.lang =
@@ -541,7 +758,7 @@ function applyLanguage() {
 
 
     /*
-       Elements using data-i18n
+        Normal text
     */
 
     document
@@ -551,11 +768,14 @@ function applyLanguage() {
         .forEach(element => {
 
             const key =
-                element.dataset.i18n;
+                element.getAttribute(
+                    "data-i18n"
+                );
 
 
             if (
-                translations[language][key]
+                key &&
+                translations[language][key] !== undefined
             ) {
 
                 element.textContent =
@@ -567,7 +787,7 @@ function applyLanguage() {
 
 
     /*
-       Placeholder translations
+        Placeholder
     */
 
     document
@@ -577,11 +797,14 @@ function applyLanguage() {
         .forEach(element => {
 
             const key =
-                element.dataset.i18nPlaceholder;
+                element.getAttribute(
+                    "data-i18n-placeholder"
+                );
 
 
             if (
-                translations[language][key]
+                key &&
+                translations[language][key] !== undefined
             ) {
 
                 element.placeholder =
@@ -593,8 +816,33 @@ function applyLanguage() {
 
 
     /*
-       Known existing elements
+        Title attribute
     */
+
+    document
+        .querySelectorAll(
+            "[data-i18n-title]"
+        )
+        .forEach(element => {
+
+            const key =
+                element.getAttribute(
+                    "data-i18n-title"
+                );
+
+
+            if (
+                key &&
+                translations[language][key] !== undefined
+            ) {
+
+                element.title =
+                    translations[language][key];
+
+            }
+
+        });
+
 
     setText(
         "loginButton",
@@ -611,19 +859,35 @@ function applyLanguage() {
         t("dashboard")
     );
 
+
     setText(
         "userPlan",
+
         currentProfile?.plan === "premium"
             ? t("premiumPlan")
             : t("free")
+
     );
+
+
+    /*
+        Refresh opened tool
+    */
+
+    if (currentTool) {
+
+        updateToolLanguage(
+            currentTool
+        );
+
+    }
 
 }
 
 
-/* =========================
-   SAFE TEXT
-========================= */
+/* =========================================================
+   13. SAFE SET TEXT
+========================================================= */
 
 function setText(
     id,
@@ -644,28 +908,36 @@ function setText(
 }
 
 
-/* =========================
-   REGISTER
-========================= */
+/* =========================================================
+   14. REGISTER
+========================================================= */
 
 async function register() {
 
     const name =
-        document.getElementById(
-            "registerName"
-        )?.value.trim();
+        document
+            .getElementById(
+                "registerName"
+            )
+            ?.value
+            .trim();
 
 
     const email =
-        document.getElementById(
-            "registerEmail"
-        )?.value.trim();
+        document
+            .getElementById(
+                "registerEmail"
+            )
+            ?.value
+            .trim();
 
 
     const password =
-        document.getElementById(
-            "registerPassword"
-        )?.value;
+        document
+            .getElementById(
+                "registerPassword"
+            )
+            ?.value;
 
 
     if (
@@ -679,6 +951,7 @@ async function register() {
         );
 
         return;
+
     }
 
 
@@ -691,56 +964,73 @@ async function register() {
         );
 
         return;
+
     }
 
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth.signUp({
+    try {
 
-            email,
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signUp({
 
-            password,
+                    email,
 
-            options: {
+                    password,
 
-                data: {
+                    options: {
 
-                    full_name:
-                        name
+                        data: {
 
-                }
+                            full_name:
+                                name
 
-            }
+                        }
 
-        });
+                    }
+
+                });
 
 
-    if (error) {
+        if (error) {
+
+            showToast(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        closeAuth();
+
+
+        if (
+            data.session
+        ) {
+
+            showToast(
+                t("accountCreated")
+            );
+
+        } else {
+
+            showToast(
+                t("verifyEmail")
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
 
         showToast(
-            error.message
-        );
-
-        return;
-    }
-
-
-    closeAuth();
-
-
-    if (data.session) {
-
-        showToast(
-            t("accountCreated")
-        );
-
-    } else {
-
-        showToast(
-            t("verifyEmail")
+            t("unknownError")
         );
 
     }
@@ -748,22 +1038,27 @@ async function register() {
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+/* =========================================================
+   15. LOGIN
+========================================================= */
 
 async function login() {
 
     const email =
-        document.getElementById(
-            "loginEmail"
-        )?.value.trim();
+        document
+            .getElementById(
+                "loginEmail"
+            )
+            ?.value
+            .trim();
 
 
     const password =
-        document.getElementById(
-            "loginPassword"
-        )?.value;
+        document
+            .getElementById(
+                "loginPassword"
+            )
+            ?.value;
 
 
     if (
@@ -776,184 +1071,236 @@ async function login() {
         );
 
         return;
+
     }
 
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth
-            .signInWithPassword({
+    try {
 
-                email,
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
 
-                password
+                    email,
 
-            });
+                    password
+
+                });
 
 
-    if (error) {
+        if (error) {
 
-        showToast(
-            error.message
+            showToast(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        currentUser =
+            data.user;
+
+
+        closeAuth();
+
+
+        showPage(
+            "dashboard"
         );
 
-        return;
+
+        showToast(
+            t("loginSuccess")
+        );
+
+
+        await updateUI();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            t("unknownError")
+        );
+
     }
 
-
-    currentUser =
-        data.user;
-
-
-    closeAuth();
-
-
-    showPage(
-        "dashboard"
-    );
-
-
-    showToast(
-        t("loginSuccess")
-    );
-
-
-    await updateUI();
 }
 
 
-/* =========================
-   LOGOUT
-========================= */
+/* =========================================================
+   16. LOGOUT
+========================================================= */
 
 async function logout() {
 
-    const {
-        error
-    } =
-        await supabaseClient.auth.signOut();
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient.auth
+                .signOut();
 
 
-    if (error) {
+        if (error) {
 
-        showToast(
-            error.message
+            showToast(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        currentUser = null;
+
+        currentProfile = null;
+
+
+        showPage(
+            "home"
         );
 
-        return;
+
+        showToast(
+            t("logoutSuccess")
+        );
+
+
+        await updateUI();
+
+    } catch (error) {
+
+        console.error(error);
+
     }
 
-
-    currentUser = null;
-
-    currentProfile = null;
-
-
-    showPage(
-        "home"
-    );
-
-
-    showToast(
-        t("logoutSuccess")
-    );
 }
 
 
-/* =========================
-   PROFILE
-========================= */
+/* =========================================================
+   17. LOAD PROFILE
+========================================================= */
 
 async function loadProfile() {
 
-    if (!currentUser) return;
+    if (!currentUser) {
+
+        return;
+
+    }
 
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("profiles")
-            .select("*")
-            .eq(
-                "id",
-                currentUser.id
-            )
-            .single();
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+
+                .from("profiles")
+
+                .select("*")
+
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+
+                .maybeSingle();
 
 
-    if (error) {
+        if (error) {
+
+            console.error(
+                "Profile error:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        /*
+            Profile belum ada.
+            Kita tetap biarkan login berjalan.
+        */
+
+        currentProfile =
+            data || {
+
+                id:
+                    currentUser.id,
+
+                plan:
+                    "free",
+
+                premium_until:
+                    null
+
+            };
+
+
+        setText(
+
+            "userEmail",
+
+            currentUser.email || "-"
+
+        );
+
+
+        setText(
+
+            "userPlan",
+
+            currentProfile.plan === "premium"
+                ? t("premiumPlan")
+                : t("free")
+
+        );
+
+
+        setText(
+
+            "premiumUntil",
+
+            currentProfile.premium_until
+                ? formatDate(
+                    currentProfile.premium_until
+                )
+                : "-"
+
+        );
+
+
+        await loadHistory();
+
+    } catch (error) {
 
         console.error(
             "Profile error:",
             error
         );
 
-        return;
     }
 
-
-    currentProfile =
-        data;
-
-
-    const email =
-        document.getElementById(
-            "userEmail"
-        );
-
-    const plan =
-        document.getElementById(
-            "userPlan"
-        );
-
-    const premiumUntil =
-        document.getElementById(
-            "premiumUntil"
-        );
-
-
-    if (email) {
-
-        email.textContent =
-            currentUser.email ||
-            "-";
-
-    }
-
-
-    if (plan) {
-
-        plan.textContent =
-            data.plan === "premium"
-                ? t("premiumPlan")
-                : t("free");
-
-    }
-
-
-    if (premiumUntil) {
-
-        premiumUntil.textContent =
-            data.premium_until
-                ? formatDate(
-                    data.premium_until
-                )
-                : "-";
-
-    }
-
-
-    await loadHistory();
 }
 
 
-/* =========================
-   HISTORY
-========================= */
+/* =========================================================
+   18. LOAD HISTORY
+========================================================= */
 
 async function loadHistory() {
 
@@ -969,59 +1316,80 @@ async function loadHistory() {
     ) {
 
         return;
+
     }
 
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("calculations")
-            .select("*")
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
-            .limit(10);
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+
+                .from("calculations")
+
+                .select("*")
+
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+
+                .order(
+                    "created_at",
+                    {
+                        ascending:
+                            false
+                    }
+                )
+
+                .limit(10);
 
 
-    if (error) {
+        if (error) {
+
+            console.error(error);
+
+            historyList.innerHTML =
+                `
+                <p class="muted">
+                    ${escapeHTML(
+                        t("historyError")
+                    )}
+                </p>
+                `;
+
+            return;
+
+        }
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            historyList.innerHTML =
+                `
+                <p class="muted">
+                    ${escapeHTML(
+                        t("noHistory")
+                    )}
+                </p>
+                `;
+
+            return;
+
+        }
+
 
         historyList.innerHTML =
-            `<p class="muted">
-                ${t("historyError")}
-            </p>`;
+            data
+                .map(item => {
 
-        return;
-    }
-
-
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        historyList.innerHTML =
-            `<p class="muted">
-                ${t("noHistory")}
-            </p>`;
-
-        return;
-    }
-
-
-    historyList.innerHTML =
-        data
-            .map(item => {
-
-                return `
+                    return `
                     <div
                         class="dashboard-card"
                         style="margin-bottom:10px"
@@ -1029,7 +1397,8 @@ async function loadHistory() {
 
                         <strong>
                             ${escapeHTML(
-                                item.tool_name
+                                item.tool_name ||
+                                "-"
                             )}
                         </strong>
 
@@ -1040,16 +1409,26 @@ async function loadHistory() {
                         </span>
 
                     </div>
-                `;
+                    `;
 
-            })
-            .join("");
+                })
+                .join("");
+
+    } catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+    }
+
 }
 
 
-/* =========================
-   SAVE CALCULATION
-========================= */
+/* =========================================================
+   19. SAVE CALCULATION
+========================================================= */
 
 async function saveCalculation(
     toolName,
@@ -1060,49 +1439,62 @@ async function saveCalculation(
     if (!currentUser) {
 
         return;
+
     }
 
 
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("calculations")
-            .insert({
+    try {
 
-                user_id:
-                    currentUser.id,
-
-                tool_name:
-                    toolName,
-
-                input_data:
-                    inputData,
-
-                result_data:
-                    resultData
-
-            });
-
-
-    if (error) {
-
-        console.error(
-            "History error:",
+        const {
             error
-        );
+        } =
+            await supabaseClient
 
-        return;
+                .from("calculations")
+
+                .insert({
+
+                    user_id:
+                        currentUser.id,
+
+                    tool_name:
+                        toolName,
+
+                    input_data:
+                        inputData,
+
+                    result_data:
+                        resultData
+
+                });
+
+
+        if (error) {
+
+            console.error(
+                "Save calculation:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        await loadHistory();
+
+    } catch (error) {
+
+        console.error(error);
+
     }
 
-
-    await loadHistory();
 }
 
 
-/* =========================
-   PAGE NAVIGATION
-========================= */
+/* =========================================================
+   20. PAGE NAVIGATION
+========================================================= */
 
 function showPage(page) {
 
@@ -1123,21 +1515,28 @@ function showPage(page) {
 
     pages.forEach(id => {
 
-        const element =
-            document.getElementById(
-                id
-            );
-
-
-        if (element) {
-
-            element.classList.remove(
-                "active"
-            );
-
-        }
+        document
+            .getElementById(id)
+            ?.classList
+            .remove("active");
 
     });
+
+
+    /*
+        Dashboard requires login
+    */
+
+    if (
+        page === "dashboard" &&
+        !currentUser
+    ) {
+
+        openAuth("login");
+
+        return;
+
+    }
 
 
     const target =
@@ -1152,46 +1551,138 @@ function showPage(page) {
             "active"
         );
 
+    }
 
-        window.scrollTo({
 
-            top: 0,
+    window.scrollTo({
 
-            behavior: "smooth"
+        top: 0,
+
+        behavior:
+            "smooth"
+
+    });
+
+
+    if (
+        page === "dashboard" &&
+        currentUser
+    ) {
+
+        loadProfile();
+
+    }
+
+
+    applyLanguage();
+
+}
+
+
+/* =========================================================
+   21. OPEN TOOL
+========================================================= */
+
+function openTool(type) {
+
+    currentTool =
+        type;
+
+
+    /*
+        Advanced requires Premium
+    */
+
+    if (
+        type === "advanced" &&
+        currentProfile?.plan !== "premium"
+    ) {
+
+        showToast(
+            t("premiumOnly")
+        );
+
+        showPage(
+            "premium"
+        );
+
+        return;
+
+    }
+
+
+    showPage(
+        "tool"
+    );
+
+
+    document
+        .querySelectorAll(
+            ".calculator"
+        )
+        .forEach(element => {
+
+            element.classList.add(
+                "hidden"
+            );
 
         });
+
+
+    if (
+        type === "time"
+    ) {
+
+        document
+            .getElementById(
+                "timeCalculator"
+            )
+            ?.classList
+            .remove("hidden");
 
     }
 
 
     if (
-        page === "dashboard"
+        type === "fuel"
     ) {
 
-        if (!currentUser) {
+        document
+            .getElementById(
+                "fuelCalculator"
+            )
+            ?.classList
+            .remove("hidden");
 
-            openAuth(
-                "login"
-            );
-
-            return;
-        }
-
-
-        loadProfile();
     }
+
+
+    if (
+        type === "advanced"
+    ) {
+
+        document
+            .getElementById(
+                "advancedCalculator"
+            )
+            ?.classList
+            .remove("hidden");
+
+    }
+
+
+    updateToolLanguage(
+        type
+    );
 
 }
 
 
-/* =========================
-   TOOLS
-========================= */
+/* =========================================================
+   22. TOOL LANGUAGE
+========================================================= */
 
-function openTool(type) {
-
-    showPage("tool");
-
+function updateToolLanguage(type) {
 
     const title =
         document.getElementById(
@@ -1202,19 +1693,6 @@ function openTool(type) {
         document.getElementById(
             "toolDescription"
         );
-
-
-    document
-        .querySelectorAll(
-            ".calculator"
-        )
-        .forEach(el => {
-
-            el.classList.add(
-                "hidden"
-            );
-
-        });
 
 
     if (
@@ -1232,20 +1710,9 @@ function openTool(type) {
         if (description) {
 
             description.textContent =
-                english
-                    ? "Calculate the duration between two times."
-                    : "Hitung durasi antara dua waktu.";
+                t("timeDescription");
 
         }
-
-
-        document
-            .getElementById(
-                "timeCalculator"
-            )
-            ?.classList.remove(
-                "hidden"
-            );
 
     }
 
@@ -1265,20 +1732,9 @@ function openTool(type) {
         if (description) {
 
             description.textContent =
-                english
-                    ? "Calculate average fuel consumption."
-                    : "Hitung konsumsi bahan bakar rata-rata.";
+                t("fuelDescription");
 
         }
-
-
-        document
-            .getElementById(
-                "fuelCalculator"
-            )
-            ?.classList.remove(
-                "hidden"
-            );
 
     }
 
@@ -1287,113 +1743,41 @@ function openTool(type) {
         type === "advanced"
     ) {
 
-        title.textContent =
-            t("advancedEngineering");
+        if (title) {
+
+            title.textContent =
+                t("advancedEngineering");
+
+        }
 
 
-        description.textContent =
-            english
-                ? "Premium engineering tools."
-                : "Tools engineering Premium.";
+        if (description) {
 
+            description.textContent =
+                t("advancedDescription");
 
-        document
-            .getElementById(
-                "advancedCalculator"
-            )
-            ?.classList.remove(
-                "hidden"
-            );
+        }
 
     }
 
 }
 
 
-/* =========================
-   TIME CALCULATOR
-========================= */
+/* =========================================================
+   23. TIME CALCULATOR
+========================================================= */
 
 async function calculateTime() {
 
-    const start =
+    const startElement =
         document.getElementById(
             "startTime"
-        )?.value;
+        );
 
-
-    const end =
+    const endElement =
         document.getElementById(
             "endTime"
-        )?.value;
-
-
-    if (
-        !start ||
-        !end
-    ) {
-
-        showToast(
-            t("enterBothTime")
         );
-
-        return;
-    }
-
-
-    const startDate =
-        new Date(start);
-
-    const endDate =
-        new Date(end);
-
-
-    const difference =
-        endDate.getTime() -
-        startDate.getTime();
-
-
-    if (
-        difference < 0
-    ) {
-
-        showToast(
-            t("invalidTime")
-        );
-
-        return;
-    }
-
-
-    const totalMinutes =
-        Math.floor(
-            difference / 60000
-        );
-
-
-    const days =
-        Math.floor(
-            totalMinutes / 1440
-        );
-
-
-    const hours =
-        Math.floor(
-            (totalMinutes % 1440) /
-            60
-        );
-
-
-    const minutes =
-        totalMinutes % 60;
-
-
-    const result =
-        english
-
-            ? `${days} days ${hours} hours ${minutes} minutes`
-
-            : `${days} hari ${hours} jam ${minutes} menit`;
 
 
     const resultElement =
@@ -1402,59 +1786,47 @@ async function calculateTime() {
         );
 
 
-    if (resultElement) {
+    if (
+        !startElement ||
+        !endElement
+    ) {
 
-        resultElement.textContent =
-            result;
+        return;
 
     }
 
 
-    await saveCalculation(
+    const startValue =
+        startElement.value;
 
-        "Time Calculator",
-
-        {
-            start,
-            end
-        },
-
-        {
-            result
-        }
-
-    );
-
-}
-
-
-/* =========================
-   FUEL CALCULATOR
-========================= */
-
-async function calculateFuel() {
-
-    const fuel =
-        Number(
-            document.getElementById(
-                "fuelLiter"
-            )?.value
-        );
-
-
-    const hours =
-        Number(
-            document.getElementById(
-                "fuelHours"
-            )?.value
-        );
+    const endValue =
+        endElement.value;
 
 
     if (
-        !Number.isFinite(fuel) ||
-        !Number.isFinite(hours) ||
-        fuel <= 0 ||
-        hours <= 0
+        !startValue ||
+        !endValue
+    ) {
+
+        showToast(
+            t("enterBothTime")
+        );
+
+        return;
+
+    }
+
+
+    const start =
+        new Date(startValue);
+
+    const end =
+        new Date(endValue);
+
+
+    if (
+        isNaN(start.getTime()) ||
+        isNaN(end.getTime())
     ) {
 
         showToast(
@@ -1462,19 +1834,128 @@ async function calculateFuel() {
         );
 
         return;
+
     }
 
 
-    const consumption =
-        fuel / hours;
+    if (
+        end <= start
+    ) {
+
+        showToast(
+            t("invalidTime")
+        );
+
+        return;
+
+    }
 
 
-    const result =
+    const milliseconds =
+        end - start;
+
+
+    const totalMinutes =
+        Math.floor(
+            milliseconds /
+            60000
+        );
+
+
+    const days =
+        Math.floor(
+            totalMinutes /
+            1440
+        );
+
+
+    const hours =
+        Math.floor(
+            (
+                totalMinutes %
+                1440
+            ) /
+            60
+        );
+
+
+    const minutes =
+        totalMinutes % 60;
+
+
+    const totalHours =
+        milliseconds /
+        3600000;
+
+
+    const resultText =
         english
+            ?
+            `${days} day(s), ${hours} hour(s), ${minutes} minute(s) — ${totalHours.toFixed(2)} hours`
+            :
+            `${days} hari, ${hours} jam, ${minutes} menit — ${totalHours.toFixed(2)} jam`;
 
-            ? `${consumption.toFixed(2)} L/hour`
 
-            : `${consumption.toFixed(2)} L/jam`;
+    if (resultElement) {
+
+        resultElement.textContent =
+            resultText;
+
+    }
+
+
+    await saveCalculation(
+
+        english
+            ? "Time Calculator"
+            : "Kalkulator Waktu",
+
+        {
+
+            start:
+                startValue,
+
+            end:
+                endValue
+
+        },
+
+        {
+
+            days,
+
+            hours,
+
+            minutes,
+
+            total_hours:
+                Number(
+                    totalHours.toFixed(2)
+                )
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   24. FUEL CALCULATOR
+========================================================= */
+
+async function calculateFuel() {
+
+    const fuelElement =
+        document.getElementById(
+            "fuelAmount"
+        );
+
+
+    const hoursElement =
+        document.getElementById(
+            "fuelHours"
+        );
 
 
     const resultElement =
@@ -1483,26 +1964,85 @@ async function calculateFuel() {
         );
 
 
+    if (
+        !fuelElement ||
+        !hoursElement
+    ) {
+
+        return;
+
+    }
+
+
+    const fuel =
+        Number(
+            fuelElement.value
+        );
+
+
+    const hours =
+        Number(
+            hoursElement.value
+        );
+
+
+    if (
+        !Number.isFinite(fuel) ||
+        !Number.isFinite(hours) ||
+        fuel < 0 ||
+        hours <= 0
+    ) {
+
+        showToast(
+            t("invalidValue")
+        );
+
+        return;
+
+    }
+
+
+    const average =
+        fuel / hours;
+
+
+    const resultText =
+        english
+            ?
+            `${average.toFixed(2)} liters/hour`
+            :
+            `${average.toFixed(2)} liter/jam`;
+
+
     if (resultElement) {
 
         resultElement.textContent =
-            result;
+            resultText;
 
     }
 
 
     await saveCalculation(
 
-        "Fuel Calculator",
+        english
+            ? "Fuel Calculator"
+            : "Kalkulator Bahan Bakar",
 
         {
+
             fuel,
+
             hours
+
         },
 
         {
-            consumption,
-            result
+
+            average_liters_per_hour:
+                Number(
+                    average.toFixed(2)
+                )
+
         }
 
     );
@@ -1510,86 +2050,30 @@ async function calculateFuel() {
 }
 
 
-/* =========================
-   AUTH MODAL
-========================= */
+/* =========================================================
+   25. PREMIUM PAYMENT
+========================================================= */
 
-function openAuth(type) {
+/*
+    plan:
+    "monthly"
+    "yearly"
+*/
 
-    document
-        .getElementById(
-            "authModal"
-        )
-        ?.classList.add(
-            "active"
-        );
-
-
-    switchAuth(type);
-}
-
-
-function closeAuth() {
-
-    document
-        .getElementById(
-            "authModal"
-        )
-        ?.classList.remove(
-            "active"
-        );
-}
-
-
-function switchAuth(type) {
-
-    const loginForm =
-        document.getElementById(
-            "loginForm"
-        );
-
-    const registerForm =
-        document.getElementById(
-            "registerForm"
-        );
-
+async function buyPremium(plan) {
 
     if (
-        type === "login"
+        paymentProcessing
     ) {
 
-        loginForm?.classList.remove(
-            "hidden"
-        );
-
-        registerForm?.classList.add(
-            "hidden"
-        );
-
-    } else {
-
-        loginForm?.classList.add(
-            "hidden"
-        );
-
-        registerForm?.classList.remove(
-            "hidden"
-        );
+        return;
 
     }
 
-}
 
-
-/* =========================
-   PAYMENT
-========================= */
-
-async function startPayment(
-    plan
-) {
-
-    if (!currentUser) {
+    if (
+        !currentUser
+    ) {
 
         showToast(
             t("loginFirst")
@@ -1600,19 +2084,46 @@ async function startPayment(
         );
 
         return;
+
     }
+
+
+    if (
+        plan !== "monthly" &&
+        plan !== "yearly"
+    ) {
+
+        showToast(
+            t("invalidPlan")
+        );
+
+        return;
+
+    }
+
+
+    paymentProcessing =
+        true;
+
+
+    showToast(
+        t("preparingPayment")
+    );
 
 
     try {
 
-        showToast(
-            t("preparingPayment")
-        );
-
+        /*
+            Ambil session terbaru Supabase.
+        */
 
         const {
-            data: sessionData,
-            error: sessionError
+            data:
+            sessionData,
+
+            error:
+            sessionError
+
         } =
             await supabaseClient.auth
                 .getSession();
@@ -1625,31 +2136,42 @@ async function startPayment(
         }
 
 
-        const session =
-            sessionData.session;
+        const accessToken =
+            sessionData
+                ?.session
+                ?.access_token;
 
 
-        if (!session) {
+        if (!accessToken) {
+
+            paymentProcessing =
+                false;
 
             showToast(
                 t("loginFirst")
             );
 
             return;
+
         }
 
 
         /*
-           IMPORTANT:
-           Do not put Midtrans Server Key here.
+            PAYMENT API
+
+            IMPORTANT:
+            Selalu POST.
         */
 
         const response =
             await fetch(
+
                 `${BACKEND_URL}/api/payment`,
+
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
 
@@ -1657,34 +2179,54 @@ async function startPayment(
                             "application/json",
 
                         "Authorization":
-                            `Bearer ${session.access_token}`
+                            `Bearer ${accessToken}`
 
                     },
 
                     body:
                         JSON.stringify({
-                            plan
+
+                            plan,
+
+                            user_id:
+                                currentUser.id,
+
+                            email:
+                                currentUser.email
+
                         })
 
                 }
+
             );
 
 
         /*
-           Try to read JSON safely
+            Baca response aman meskipun backend
+            mengembalikan text/error HTML.
         */
 
-        let result = null;
+        const responseText =
+            await response.text();
+
+
+        let data = {};
+
 
         try {
 
-            result =
-                await response.json();
+            data =
+                responseText
+                    ? JSON.parse(
+                        responseText
+                    )
+                    : {};
 
-        } catch (jsonError) {
+        } catch {
 
-            throw new Error(
-                "Server returned an invalid response."
+            console.error(
+                "Payment raw response:",
+                responseText
             );
 
         }
@@ -1692,311 +2234,590 @@ async function startPayment(
 
         if (!response.ok) {
 
-            throw new Error(
-                result?.message ||
-                t("paymentError")
+            console.error(
+                "Payment API error:",
+                response.status,
+                data,
+                responseText
             );
+
+
+            const message =
+                data?.message ||
+                data?.error ||
+                `${t("paymentError")} (${response.status})`;
+
+
+            showToast(
+                message
+            );
+
+
+            paymentProcessing =
+                false;
+
+            return;
 
         }
 
+
+        /*
+            Mendukung beberapa nama response backend.
+        */
+
+        const snapToken =
+            data.token ||
+            data.snap_token ||
+            data.snapToken ||
+            data.payment_token;
+
+
+        const redirectUrl =
+            data.redirect_url ||
+            data.redirectUrl ||
+            data.payment_url ||
+            data.url;
+
+
+        /*
+            MIDTRANS SNAP
+        */
 
         if (
-            !result ||
-            !result.token
+            snapToken &&
+            window.snap
         ) {
 
-            throw new Error(
-                t("tokenError")
+            window.snap.pay(
+
+                snapToken,
+
+                {
+
+                    onSuccess:
+                        async function (
+                            result
+                        ) {
+
+                            console.log(
+                                "Payment success:",
+                                result
+                            );
+
+
+                            showToast(
+                                t("paymentSuccess")
+                            );
+
+
+                            paymentProcessing =
+                                false;
+
+
+                            await refreshPremiumStatus();
+
+                        },
+
+
+                    onPending:
+                        function (
+                            result
+                        ) {
+
+                            console.log(
+                                "Payment pending:",
+                                result
+                            );
+
+
+                            showToast(
+                                t("paymentPending")
+                            );
+
+
+                            paymentProcessing =
+                                false;
+
+                        },
+
+
+                    onError:
+                        function (
+                            result
+                        ) {
+
+                            console.error(
+                                "Payment failed:",
+                                result
+                            );
+
+
+                            showToast(
+                                t("paymentFailed")
+                            );
+
+
+                            paymentProcessing =
+                                false;
+
+                        },
+
+
+                    onClose:
+                        function () {
+
+                            showToast(
+                                t("checkoutClosed")
+                            );
+
+
+                            paymentProcessing =
+                                false;
+
+                        }
+
+                }
+
             );
+
+
+            return;
 
         }
 
 
-        loadMidtransSnap(
-            result.token
+        /*
+            Jika backend mengembalikan URL
+            pembayaran.
+        */
+
+        if (redirectUrl) {
+
+            paymentProcessing =
+                false;
+
+
+            window.location.href =
+                redirectUrl;
+
+
+            return;
+
+        }
+
+
+        /*
+            Kalau backend sukses tetapi token
+            tidak ada.
+        */
+
+        console.error(
+            "Payment response:",
+            data
         );
 
+
+        showToast(
+            t("tokenError")
+        );
+
+
+        paymentProcessing =
+            false;
 
     } catch (error) {
 
         console.error(
-            "PAYMENT ERROR:",
+            "Payment error:",
             error
         );
 
 
-        /*
-           More useful error
-           than only "Failed to fetch"
-        */
-
-        if (
-            error instanceof TypeError &&
-            error.message ===
-            "Failed to fetch"
-        ) {
-
-            showToast(
-                english
-                    ? "Unable to connect to payment server."
-                    : "Tidak dapat terhubung ke server pembayaran."
-            );
-
-        } else {
-
-            showToast(
-                error.message ||
-                t("serverError")
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================
-   MIDTRANS SNAP
-========================= */
-
-function loadMidtransSnap(
-    token
-) {
-
-    if (
-        typeof window.snap ===
-        "undefined"
-    ) {
-
-        const script =
-            document.createElement(
-                "script"
-            );
-
-
-        script.src =
-            "https://app.sandbox.midtrans.com/snap/snap.js";
-
-
-        /*
-           Client Key only.
-           NEVER use Server Key here.
-        */
-
-        script.setAttribute(
-            "data-client-key",
-            "Mid-client-bW5KoXwW-iFCJobn"
-        );
-
-
-        script.onload = () => {
-
-            openSnap(
-                token
-            );
-
-        };
-
-
-        script.onerror = () => {
-
-            showToast(
-                english
-                    ? "Unable to load Midtrans."
-                    : "Tidak dapat memuat Midtrans."
-            );
-
-        };
-
-
-        document.body.appendChild(
-            script
-        );
-
-    } else {
-
-        openSnap(
-            token
-        );
-
-    }
-
-}
-
-
-/* =========================
-   OPEN SNAP
-========================= */
-
-function openSnap(
-    token
-) {
-
-    if (
-        !window.snap
-    ) {
-
         showToast(
-            english
-                ? "Payment system unavailable."
-                : "Sistem pembayaran tidak tersedia."
+            t("networkError")
         );
 
-        return;
+
+        paymentProcessing =
+            false;
+
     }
 
-
-    window.snap.pay(
-
-        token,
-
-        {
-
-            onSuccess: () => {
-
-                showToast(
-                    t("paymentSuccess")
-                );
+}
 
 
-                setTimeout(
-                    () => {
+/* =========================================================
+   26. PAYMENT ALIASES
+========================================================= */
 
-                        if (
-                            currentUser
-                        ) {
+/*
+    Agar HTML lama tetap bisa memakai
+    fungsi berbeda.
+*/
 
-                            loadProfile();
+function startPayment(plan) {
 
-                        }
-
-                    },
-                    3000
-                );
-
-            },
-
-
-            onPending: () => {
-
-                showToast(
-                    t("paymentPending")
-                );
-
-            },
-
-
-            onError: () => {
-
-                showToast(
-                    t("paymentFailed")
-                );
-
-            },
-
-
-            onClose: () => {
-
-                showToast(
-                    t("checkoutClosed")
-                );
-
-            }
-
-        }
-
+    return buyPremium(
+        plan
     );
 
 }
 
 
-/* =========================
-   UTILITIES
-========================= */
+function createPayment(plan) {
 
-function formatDate(
-    date
-) {
-
-    return new Date(date)
-        .toLocaleDateString(
-
-            english
-                ? "en-US"
-                : "id-ID",
-
-            {
-
-                day: "2-digit",
-
-                month: "long",
-
-                year: "numeric"
-
-            }
-
-        );
+    return buyPremium(
+        plan
+    );
 
 }
 
 
-function escapeHTML(
-    value
+function upgradePremium(plan) {
+
+    return buyPremium(
+        plan
+    );
+
+}
+
+
+/* =========================================================
+   27. REFRESH PREMIUM STATUS
+========================================================= */
+
+async function refreshPremiumStatus() {
+
+    /*
+        Webhook payment mungkin membutuhkan
+        beberapa detik untuk memperbarui database.
+
+        Kita refresh profile langsung.
+    */
+
+    await loadProfile();
+
+
+    if (
+        currentProfile?.plan === "premium"
+    ) {
+
+        applyLanguage();
+
+    }
+
+}
+
+
+/* =========================================================
+   28. AUTH MODAL
+========================================================= */
+
+function openAuth(
+    mode = "login"
 ) {
+
+    const modal =
+        document.getElementById(
+            "authModal"
+        );
+
+
+    if (!modal) {
+
+        console.warn(
+            "authModal not found"
+        );
+
+        return;
+
+    }
+
+
+    modal.classList.remove(
+        "hidden"
+    );
+
+
+    modal.classList.add(
+        "active"
+    );
+
+
+    switchAuth(
+        mode
+    );
+
+}
+
+
+/* =========================================================
+   29. CLOSE AUTH
+========================================================= */
+
+function closeAuth() {
+
+    const modal =
+        document.getElementById(
+            "authModal"
+        );
+
+
+    if (!modal) {
+
+        return;
+
+    }
+
+
+    modal.classList.add(
+        "hidden"
+    );
+
+
+    modal.classList.remove(
+        "active"
+    );
+
+}
+
+
+/* =========================================================
+   30. SWITCH AUTH FORM
+========================================================= */
+
+function switchAuth(mode) {
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+
+    const registerForm =
+        document.getElementById(
+            "registerForm"
+        );
+
+
+    if (
+        mode === "register"
+    ) {
+
+        loginForm
+            ?.classList
+            .add("hidden");
+
+
+        registerForm
+            ?.classList
+            .remove("hidden");
+
+    } else {
+
+        registerForm
+            ?.classList
+            .add("hidden");
+
+
+        loginForm
+            ?.classList
+            .remove("hidden");
+
+    }
+
+
+    applyLanguage();
+
+}
+
+
+/* =========================================================
+   31. FORMAT DATE
+========================================================= */
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return "-";
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        isNaN(date.getTime())
+    ) {
+
+        return "-";
+
+    }
+
+
+    try {
+
+        return new Intl
+            .DateTimeFormat(
+
+                english
+                    ? "en-US"
+                    : "id-ID",
+
+                {
+
+                    dateStyle:
+                        "medium",
+
+                    timeStyle:
+                        "short"
+
+                }
+
+            )
+            .format(date);
+
+    } catch {
+
+        return date
+            .toLocaleString();
+
+    }
+
+}
+
+
+/* =========================================================
+   32. ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
 
     return String(value)
 
-        .replaceAll(
-            "&",
+        .replace(
+            /&/g,
             "&amp;"
         )
 
-        .replaceAll(
-            "<",
+        .replace(
+            /</g,
             "&lt;"
         )
 
-        .replaceAll(
-            ">",
+        .replace(
+            />/g,
             "&gt;"
         )
 
-        .replaceAll(
-            '"',
+        .replace(
+            /"/g,
             "&quot;"
         )
 
-        .replaceAll(
-            "'",
+        .replace(
+            /'/g,
             "&#039;"
         );
 
 }
 
 
-function showToast(
-    message
-) {
+/* =========================================================
+   33. TOAST
+========================================================= */
 
-    const toast =
+let toastTimer = null;
+
+
+function showToast(message) {
+
+    let toast =
         document.getElementById(
             "toast"
         );
 
 
+    /*
+        Kalau HTML belum punya toast,
+        script akan membuatnya sendiri.
+    */
+
     if (!toast) {
 
-        console.log(
-            message
+        toast =
+            document.createElement(
+                "div"
+            );
+
+
+        toast.id =
+            "toast";
+
+
+        toast.style.position =
+            "fixed";
+
+        toast.style.bottom =
+            "24px";
+
+        toast.style.left =
+            "50%";
+
+        toast.style.transform =
+            "translateX(-50%)";
+
+        toast.style.zIndex =
+            "99999";
+
+        toast.style.background =
+            "#222";
+
+        toast.style.color =
+            "#fff";
+
+        toast.style.padding =
+            "12px 18px";
+
+        toast.style.borderRadius =
+            "10px";
+
+        toast.style.maxWidth =
+            "90%";
+
+        toast.style.textAlign =
+            "center";
+
+        toast.style.display =
+            "none";
+
+
+        document.body.appendChild(
+            toast
         );
 
-        return;
     }
 
 
     toast.textContent =
         message;
+
+
+    toast.style.display =
+        "block";
 
 
     toast.classList.add(
@@ -2005,64 +2826,84 @@ function showToast(
 
 
     clearTimeout(
-        window.toastTimer
+        toastTimer
     );
 
 
-    window.toastTimer =
+    toastTimer =
         setTimeout(
             () => {
 
-                toast.classList.remove(
-                    "show"
-                );
+                toast
+                    .classList
+                    .remove("show");
+
+
+                toast.style.display =
+                    "none";
 
             },
+
             3000
+
         );
 
 }
 
 
-/* =========================
-   GLOBAL FUNCTIONS
-========================= */
+/* =========================================================
+   34. CLICK OUTSIDE MODAL
+========================================================= */
 
-window.register =
-    register;
+document.addEventListener(
 
-window.login =
-    login;
+    "click",
 
-window.logout =
-    logout;
+    event => {
 
-window.openAuth =
-    openAuth;
+        const modal =
+            document.getElementById(
+                "authModal"
+            );
 
-window.closeAuth =
-    closeAuth;
 
-window.switchAuth =
-    switchAuth;
+        if (
+            modal &&
+            event.target === modal
+        ) {
 
-window.showPage =
-    showPage;
+            closeAuth();
 
-window.openTool =
-    openTool;
+        }
 
-window.calculateTime =
-    calculateTime;
+    }
 
-window.calculateFuel =
-    calculateFuel;
+);
 
-window.startPayment =
-    startPayment;
 
-window.toggleLanguage =
-    toggleLanguage;
+/* =========================================================
+   35. ESC CLOSE MODAL
+========================================================= */
 
-window.loadProfile =
-    loadProfile;
+document.addEventListener(
+
+    "keydown",
+
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeAuth();
+
+        }
+
+    }
+
+);
+
+
+/* =========================================================
+   END ENGINEX SCRIPT
+========================================================= */
