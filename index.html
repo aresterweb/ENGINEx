@@ -46,10 +46,6 @@
 
     <!-- =========================
          MIDTRANS SNAP
-
-         PENTING:
-         PERTAHANKAN CLIENT KEY MIDTRANS
-         YANG SEKARANG SUDAH BEKERJA.
     ========================== -->
 
     <script
@@ -189,7 +185,6 @@
         id="homePage"
         class="page active"
     >
-
 
         <div class="hero">
 
@@ -663,245 +658,1368 @@
 
 
 
-        <!-- =============================================
+        <!-- =================================================
              ADVANCED PREMIUM
-             SUDAH DIUBAH MENJADI PREMIUM UNLOCKED
-        ============================================== -->
+        ================================================== -->
 
         <div
             id="advancedCalculator"
             class="calculator hidden"
         >
 
-            <div class="calculator-card">
 
-                <div
-                    class="premium-badge"
-                    style="margin-bottom:16px;"
-                >
-                    PREMIUM ACTIVE
-                </div>
+            <!-- =============================================
+                 PREMIUM TOOLS MENU
+            ============================================== -->
 
+            <div id="premiumToolsMenu">
 
-                <div class="large-icon">
-                    ⚙
-                </div>
+                <div class="calculator-card">
 
+                    <div
+                        class="premium-badge"
+                        style="margin-bottom:16px;"
+                        data-i18n="premiumActive"
+                    >
+                        PREMIUM AKTIF
+                    </div>
 
-                <h2>
-                    Engineering Lanjutan
-                </h2>
 
+                    <div class="large-icon">
+                        ⚙
+                    </div>
 
-                <p style="margin-top:10px; margin-bottom:25px;">
-                    Akses Premium aktif. Gunakan tools engineering
-                    lanjutan ENGINEX di bawah ini.
-                </p>
 
+                    <h2 data-i18n="advancedEngineering">
+                        Engineering Lanjutan
+                    </h2>
 
-                <div class="card-grid">
 
+                    <p
+                        style="margin-top:10px; margin-bottom:25px;"
+                        data-i18n="premiumToolsDescription"
+                    >
+                        Gunakan tools engineering Premium ENGINEX.
+                    </p>
 
-                    <!-- ENGINE POWER -->
 
-                    <article class="tool-card">
+                    <div class="card-grid">
 
-                        <div class="tool-icon">
-                            ⚡
-                        </div>
 
-                        <h3>
-                            Engine Power
-                        </h3>
+                        <!-- ENGINE POWER -->
 
-                        <p>
-                            Perhitungan dan analisis daya mesin kapal.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                ⚡
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="enginePower">
+                                Engine Power
+                            </h3>
 
+                            <p data-i18n="enginePowerDescription">
+                                Hitung daya mesin berdasarkan torque dan RPM.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('enginePower')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- SFOC -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            ⛽
-                        </div>
 
-                        <h3>
-                            SFOC Calculator
-                        </h3>
+                        <!-- SFOC -->
 
-                        <p>
-                            Specific Fuel Oil Consumption untuk
-                            analisis efisiensi mesin.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                ⛽
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="sfocCalculator">
+                                SFOC Calculator
+                            </h3>
 
+                            <p data-i18n="sfocDescription">
+                                Hitung Specific Fuel Oil Consumption mesin.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('sfoc')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- SHAFT POWER -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            ⚙
-                        </div>
 
-                        <h3>
-                            Shaft Power
-                        </h3>
+                        <!-- SHAFT POWER -->
 
-                        <p>
-                            Perhitungan daya poros berdasarkan
-                            torque dan RPM.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                ⚙
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="shaftPower">
+                                Shaft Power
+                            </h3>
 
+                            <p data-i18n="shaftPowerDescription">
+                                Hitung daya poros berdasarkan torque dan RPM.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('shaftPower')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- PROPELLER SLIP -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            🚢
-                        </div>
 
-                        <h3>
-                            Propeller Slip
-                        </h3>
+                        <!-- PROPELLER SLIP -->
 
-                        <p>
-                            Analisis slip propeller dan efisiensi
-                            gerak kapal.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                🚢
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="propellerSlip">
+                                Propeller Slip
+                            </h3>
 
+                            <p data-i18n="propellerSlipDescription">
+                                Hitung slip propeller berdasarkan pitch, RPM,
+                                dan kecepatan kapal.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('propellerSlip')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- COMPRESSION RATIO -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            🔧
-                        </div>
 
-                        <h3>
-                            Compression Ratio
-                        </h3>
+                        <!-- COMPRESSION RATIO -->
 
-                        <p>
-                            Perhitungan rasio kompresi silinder
-                            mesin.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                🔧
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="compressionRatio">
+                                Compression Ratio
+                            </h3>
 
+                            <p data-i18n="compressionRatioDescription">
+                                Hitung rasio kompresi mesin.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('compressionRatio')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- CYLINDER VOLUME -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            🛠
-                        </div>
 
-                        <h3>
-                            Cylinder Volume
-                        </h3>
+                        <!-- CYLINDER VOLUME -->
 
-                        <p>
-                            Menghitung displacement dan volume
-                            silinder mesin.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                🛠
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="cylinderVolume">
+                                Cylinder Volume
+                            </h3>
 
+                            <p data-i18n="cylinderVolumeDescription">
+                                Hitung displacement mesin.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('cylinderVolume')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- PUMP CAPACITY -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            💧
-                        </div>
 
-                        <h3>
-                            Pump Capacity
-                        </h3>
+                        <!-- PUMP CAPACITY -->
 
-                        <p>
-                            Analisis kapasitas dan debit pompa.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                💧
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="pumpCapacity">
+                                Pump Capacity
+                            </h3>
 
+                            <p data-i18n="pumpCapacityDescription">
+                                Hitung kapasitas pompa.
+                            </p>
 
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('pumpCapacity')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
 
-                    <!-- UNIT CONVERTER -->
+                        </article>
 
-                    <article class="tool-card">
 
-                        <div class="tool-icon">
-                            ⇄
-                        </div>
 
-                        <h3>
-                            Marine Unit Converter
-                        </h3>
+                        <!-- UNIT CONVERTER -->
 
-                        <p>
-                            Konversi unit teknik untuk kebutuhan
-                            marine engineering.
-                        </p>
+                        <article class="tool-card">
 
-                        <div class="premium-badge">
-                            PREMIUM
-                        </div>
+                            <div class="tool-icon">
+                                ⇄
+                            </div>
 
-                    </article>
+                            <h3 data-i18n="marineConverter">
+                                Marine Unit Converter
+                            </h3>
 
+                            <p data-i18n="marineConverterDescription">
+                                Konversi unit teknik marine engineering.
+                            </p>
+
+                            <button
+                                class="card-button"
+                                onclick="openPremiumCalculator('unitConverter')"
+                                type="button"
+                            >
+                                Buka
+                            </button>
+
+                        </article>
+
+
+                    </div>
 
                 </div>
 
             </div>
+
+
+
+            <!-- =================================================
+                 ENGINE POWER PANEL
+            ================================================== -->
+
+            <div
+                id="enginePowerPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+                    <h2 data-i18n="enginePower">
+                        Engine Power
+                    </h2>
+
+                    <p data-i18n="enginePowerDescription">
+                        Hitung daya mesin berdasarkan torque dan RPM.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="engineTorque"
+                            data-i18n="torque"
+                        >
+                            Torque
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="engineTorque"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="5000"
+                            >
+
+                            <span>
+                                Nm
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="engineRPM"
+                            data-i18n="rpm"
+                        >
+                            RPM
+                        </label>
+
+                        <input
+                            id="engineRPM"
+                            type="number"
+                            step="any"
+                            min="0"
+                            placeholder="1500"
+                        >
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculateEnginePower()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="enginePowerResult">
+                            Daya Mesin
+                        </span>
+
+                        <strong id="enginePowerResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SFOC PANEL
+            ================================================== -->
+
+            <div
+                id="sfocPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="sfocCalculator">
+                        SFOC Calculator
+                    </h2>
+
+
+                    <p data-i18n="sfocDescription">
+                        Hitung Specific Fuel Oil Consumption mesin.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="sfocFuelMass"
+                            data-i18n="fuelMass"
+                        >
+                            Massa Bahan Bakar
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="sfocFuelMass"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="100"
+                            >
+
+                            <span>
+                                kg
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="sfocPower"
+                            data-i18n="enginePowerInput"
+                        >
+                            Daya Mesin
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="sfocPower"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="500"
+                            >
+
+                            <span>
+                                kW
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="sfocHours"
+                            data-i18n="operatingTime"
+                        >
+                            Waktu Operasi
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="sfocHours"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="1"
+                            >
+
+                            <span>
+                                h
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculateSFOC()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="sfocResult">
+                            SFOC
+                        </span>
+
+                        <strong id="sfocResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SHAFT POWER PANEL
+            ================================================== -->
+
+            <div
+                id="shaftPowerPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="shaftPower">
+                        Shaft Power
+                    </h2>
+
+
+                    <p data-i18n="shaftPowerDescription">
+                        Hitung daya poros berdasarkan torque dan RPM.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="shaftTorque"
+                            data-i18n="torque"
+                        >
+                            Torque
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="shaftTorque"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="10000"
+                            >
+
+                            <span>
+                                Nm
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="shaftRPM"
+                            data-i18n="rpm"
+                        >
+                            RPM
+                        </label>
+
+                        <input
+                            id="shaftRPM"
+                            type="number"
+                            step="any"
+                            min="0"
+                            placeholder="300"
+                        >
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculateShaftPower()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="shaftPowerResult">
+                            Daya Poros
+                        </span>
+
+                        <strong id="shaftPowerResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PROPELLER SLIP PANEL
+            ================================================== -->
+
+            <div
+                id="propellerSlipPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="propellerSlip">
+                        Propeller Slip
+                    </h2>
+
+
+                    <p data-i18n="propellerSlipDescription">
+                        Hitung slip propeller berdasarkan pitch,
+                        RPM dan kecepatan kapal.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="propellerPitch"
+                            data-i18n="propellerPitch"
+                        >
+                            Pitch Propeller
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="propellerPitch"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="3.5"
+                            >
+
+                            <span>
+                                m
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="propellerRPM"
+                            data-i18n="propellerRPM"
+                        >
+                            RPM Propeller
+                        </label>
+
+                        <input
+                            id="propellerRPM"
+                            type="number"
+                            step="any"
+                            min="0"
+                            placeholder="100"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="vesselSpeed"
+                            data-i18n="actualSpeed"
+                        >
+                            Kecepatan Aktual Kapal
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="vesselSpeed"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="10"
+                            >
+
+                            <span>
+                                knot
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculatePropellerSlip()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="propellerSlipResult">
+                            Propeller Slip
+                        </span>
+
+                        <strong id="propellerSlipResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 COMPRESSION RATIO PANEL
+            ================================================== -->
+
+            <div
+                id="compressionRatioPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="compressionRatio">
+                        Compression Ratio
+                    </h2>
+
+
+                    <p data-i18n="compressionRatioDescription">
+                        Hitung rasio kompresi mesin.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="sweptVolume"
+                            data-i18n="sweptVolume"
+                        >
+                            Swept Volume
+                        </label>
+
+                        <input
+                            id="sweptVolume"
+                            type="number"
+                            step="any"
+                            min="0"
+                            placeholder="1000"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="clearanceVolume"
+                            data-i18n="clearanceVolume"
+                        >
+                            Clearance Volume
+                        </label>
+
+                        <input
+                            id="clearanceVolume"
+                            type="number"
+                            step="any"
+                            min="0"
+                            placeholder="80"
+                        >
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculateCompressionRatio()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="compressionRatioResult">
+                            Rasio Kompresi
+                        </span>
+
+                        <strong id="compressionRatioResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CYLINDER VOLUME PANEL
+            ================================================== -->
+
+            <div
+                id="cylinderVolumePanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="cylinderVolume">
+                        Cylinder Volume
+                    </h2>
+
+
+                    <p data-i18n="cylinderVolumeDescription">
+                        Hitung total displacement mesin.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="cylinderBore"
+                            data-i18n="bore"
+                        >
+                            Diameter Bore
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="cylinderBore"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="170"
+                            >
+
+                            <span>
+                                mm
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="cylinderStroke"
+                            data-i18n="stroke"
+                        >
+                            Stroke
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="cylinderStroke"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="180"
+                            >
+
+                            <span>
+                                mm
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="cylinderCount"
+                            data-i18n="cylinders"
+                        >
+                            Jumlah Silinder
+                        </label>
+
+                        <input
+                            id="cylinderCount"
+                            type="number"
+                            step="1"
+                            min="1"
+                            placeholder="6"
+                        >
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculateCylinderVolume()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="cylinderVolumeResult">
+                            Total Displacement
+                        </span>
+
+                        <strong id="cylinderVolumeResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PUMP CAPACITY PANEL
+            ================================================== -->
+
+            <div
+                id="pumpCapacityPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="pumpCapacity">
+                        Pump Capacity
+                    </h2>
+
+
+                    <p data-i18n="pumpCapacityDescription">
+                        Hitung kapasitas pompa.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="pumpVolume"
+                            data-i18n="pumpedVolume"
+                        >
+                            Volume Fluida
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="pumpVolume"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="1000"
+                            >
+
+                            <span>
+                                L
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="pumpMinutes"
+                            data-i18n="pumpingTime"
+                        >
+                            Waktu Pemompaan
+                        </label>
+
+                        <div class="input-unit">
+
+                            <input
+                                id="pumpMinutes"
+                                type="number"
+                                step="any"
+                                min="0"
+                                placeholder="10"
+                            >
+
+                            <span>
+                                min
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="calculatePumpCapacity()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="pumpCapacityResult">
+                            Kapasitas Pompa
+                        </span>
+
+                        <strong id="pumpCapacityResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MARINE UNIT CONVERTER PANEL
+            ================================================== -->
+
+            <div
+                id="unitConverterPanel"
+                class="premium-tool-panel hidden"
+            >
+
+                <div class="calculator-card">
+
+                    <button
+                        class="back-button"
+                        onclick="backToPremiumTools()"
+                        type="button"
+                    >
+                        ←
+                    </button>
+
+
+                    <h2 data-i18n="marineConverter">
+                        Marine Unit Converter
+                    </h2>
+
+
+                    <p data-i18n="marineConverterDescription">
+                        Konversi unit teknik marine engineering.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="converterValue"
+                            data-i18n="conversionValue"
+                        >
+                            Nilai
+                        </label>
+
+                        <input
+                            id="converterValue"
+                            type="number"
+                            step="any"
+                            placeholder="100"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="converterFrom"
+                            data-i18n="fromUnit"
+                        >
+                            Dari Unit
+                        </label>
+
+                        <select id="converterFrom">
+
+                            <optgroup label="Power">
+
+                                <option value="kw">
+                                    kW
+                                </option>
+
+                                <option value="hp">
+                                    HP
+                                </option>
+
+                                <option value="ps">
+                                    PS
+                                </option>
+
+                            </optgroup>
+
+
+                            <optgroup label="Pressure">
+
+                                <option value="bar">
+                                    bar
+                                </option>
+
+                                <option value="psi">
+                                    psi
+                                </option>
+
+                                <option value="kpa">
+                                    kPa
+                                </option>
+
+                                <option value="mpa">
+                                    MPa
+                                </option>
+
+                            </optgroup>
+
+
+                            <optgroup label="Volume">
+
+                                <option value="liter">
+                                    Liter
+                                </option>
+
+                                <option value="m3">
+                                    m³
+                                </option>
+
+                                <option value="gallon_us">
+                                    US Gallon
+                                </option>
+
+                            </optgroup>
+
+
+                            <optgroup label="Speed">
+
+                                <option value="knot">
+                                    Knot
+                                </option>
+
+                                <option value="kmh">
+                                    km/h
+                                </option>
+
+                                <option value="ms">
+                                    m/s
+                                </option>
+
+                            </optgroup>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="converterTo"
+                            data-i18n="toUnit"
+                        >
+                            Ke Unit
+                        </label>
+
+                        <select id="converterTo">
+
+                            <optgroup label="Power">
+
+                                <option value="kw">
+                                    kW
+                                </option>
+
+                                <option value="hp">
+                                    HP
+                                </option>
+
+                                <option value="ps">
+                                    PS
+                                </option>
+
+                            </optgroup>
+
+
+                            <optgroup label="Pressure">
+
+                                <option value="bar">
+                                    bar
+                                </option>
+
+                                <option value="psi">
+                                    psi
+                                </option>
+
+                                <option value="kpa">
+                                    kPa
+                                </option>
+
+                                <option value="mpa">
+                                    MPa
+                                </option>
+
+                            </optgroup>
+
+
+                            <optgroup label="Volume">
+
+                                <option value="liter">
+                                    Liter
+                                </option>
+
+                                <option value="m3">
+                                    m³
+                                </option>
+
+                                <option value="gallon_us">
+                                    US Gallon
+                                </option>
+
+                            </optgroup>
+
+
+                            <optgroup label="Speed">
+
+                                <option value="knot">
+                                    Knot
+                                </option>
+
+                                <option value="kmh">
+                                    km/h
+                                </option>
+
+                                <option value="ms">
+                                    m/s
+                                </option>
+
+                            </optgroup>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button full-width"
+                        onclick="convertMarineUnit()"
+                        type="button"
+                        data-i18n="calculate"
+                    >
+                        Hitung
+                    </button>
+
+
+                    <div class="result-box">
+
+                        <span data-i18n="conversionResult">
+                            Hasil Konversi
+                        </span>
+
+                        <strong id="converterResult">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
 
         </div>
 
@@ -1079,8 +2197,6 @@
         <div class="dashboard-grid">
 
 
-            <!-- ACCOUNT -->
-
             <div class="dashboard-card">
 
                 <span
@@ -1142,9 +2258,6 @@
             </div>
 
 
-
-            <!-- HISTORY -->
-
             <div class="dashboard-card">
 
                 <span
@@ -1187,7 +2300,6 @@
     class="modal hidden"
 >
 
-
     <div class="modal-card">
 
 
@@ -1200,10 +2312,7 @@
         </button>
 
 
-
-        <!-- =============================================
-             LOGIN
-        ============================================== -->
+        <!-- LOGIN -->
 
         <div id="loginForm">
 
@@ -1288,9 +2397,7 @@
 
 
 
-        <!-- =============================================
-             REGISTER
-        ============================================== -->
+        <!-- REGISTER -->
 
         <div
             id="registerForm"
