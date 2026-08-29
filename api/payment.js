@@ -1,47 +1,79 @@
-const { createClient } = require("@supabase/supabase-js");
-const crypto = require("crypto");
+const {
+    createClient
+} = require(
+    "@supabase/supabase-js"
+);
+
+const crypto =
+    require("crypto");
 
 
 /* =========================================================
    SUPABASE ADMIN
 ========================================================= */
 
-const supabaseAdmin = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
-    {
-        auth: {
-            autoRefreshToken: false,
-            persistSession: false
+const supabaseAdmin =
+    createClient(
+
+        process.env.SUPABASE_URL,
+
+        process.env
+            .SUPABASE_SERVICE_ROLE_KEY,
+
+        {
+
+            auth: {
+
+                autoRefreshToken:
+                    false,
+
+                persistSession:
+                    false
+
+            }
+
         }
-    }
-);
+
+    );
 
 
 /* =========================================================
    PREMIUM PLANS
 ========================================================= */
 
-/*
-    Frontend kita mengirim:
-    "monthly"
-    "yearly"
-*/
-
 const PLANS = {
 
     monthly: {
-        id: "premium_monthly",
-        name: "Enginex Premium 1 Month",
-        amount: 19900,
-        days: 30
+
+        id:
+            "premium_monthly",
+
+        name:
+            "Enginex Premium 1 Month",
+
+        amount:
+            19900,
+
+        days:
+            30
+
     },
 
+
     yearly: {
-        id: "premium_yearly",
-        name: "Enginex Premium 1 Year",
-        amount: 149900,
-        days: 365
+
+        id:
+            "premium_yearly",
+
+        name:
+            "Enginex Premium 1 Year",
+
+        amount:
+            149900,
+
+        days:
+            365
+
     }
 
 };
@@ -51,7 +83,11 @@ const PLANS = {
    HANDLER
 ========================================================= */
 
-module.exports = async function handler(req, res) {
+module.exports =
+async function handler(
+    req,
+    res
+) {
 
 
     /* =====================================================
@@ -59,18 +95,29 @@ module.exports = async function handler(req, res) {
     ===================================================== */
 
     res.setHeader(
+
         "Access-Control-Allow-Origin",
+
         "*"
+
     );
 
+
     res.setHeader(
+
         "Access-Control-Allow-Methods",
+
         "POST, OPTIONS"
+
     );
 
+
     res.setHeader(
+
         "Access-Control-Allow-Headers",
+
         "Content-Type, Authorization"
+
     );
 
 
@@ -78,7 +125,10 @@ module.exports = async function handler(req, res) {
        PREFLIGHT
     ===================================================== */
 
-    if (req.method === "OPTIONS") {
+    if (
+        req.method ===
+        "OPTIONS"
+    ) {
 
         return res
             .status(200)
@@ -91,14 +141,17 @@ module.exports = async function handler(req, res) {
        ONLY POST
     ===================================================== */
 
-    if (req.method !== "POST") {
+    if (
+        req.method !==
+        "POST"
+    ) {
 
         return res
             .status(405)
             .json({
 
                 message:
-                    "Method not allowed"
+                    "Method not allowed."
 
             });
 
@@ -109,16 +162,16 @@ module.exports = async function handler(req, res) {
 
 
         /* =================================================
-           CHECK ENVIRONMENT VARIABLES
+           CHECK ENVIRONMENT
         ================================================= */
 
         if (
-            !process.env.SUPABASE_URL ||
-            !process.env.SUPABASE_SERVICE_ROLE_KEY
+            !process.env
+                .SUPABASE_URL
         ) {
 
             console.error(
-                "Supabase environment variables missing."
+                "SUPABASE_URL missing."
             );
 
 
@@ -127,7 +180,7 @@ module.exports = async function handler(req, res) {
                 .json({
 
                     message:
-                        "Supabase server configuration error."
+                        "Supabase URL is not configured."
 
                 });
 
@@ -135,7 +188,30 @@ module.exports = async function handler(req, res) {
 
 
         if (
-            !process.env.MIDTRANS_SERVER_KEY
+            !process.env
+                .SUPABASE_SERVICE_ROLE_KEY
+        ) {
+
+            console.error(
+                "SUPABASE_SERVICE_ROLE_KEY missing."
+            );
+
+
+            return res
+                .status(500)
+                .json({
+
+                    message:
+                        "Supabase service role key is not configured."
+
+                });
+
+        }
+
+
+        if (
+            !process.env
+                .MIDTRANS_SERVER_KEY
         ) {
 
             console.error(
@@ -148,7 +224,7 @@ module.exports = async function handler(req, res) {
                 .json({
 
                     message:
-                        "Payment server configuration error."
+                        "Midtrans server key is not configured."
 
                 });
 
@@ -157,17 +233,20 @@ module.exports = async function handler(req, res) {
 
 
         /* =================================================
-           AUTHORIZATION HEADER
+           AUTHORIZATION
         ================================================= */
 
         const authorization =
-            req.headers.authorization || "";
+            req.headers
+                .authorization ||
+            "";
 
 
         if (
-            !authorization.startsWith(
-                "Bearer "
-            )
+            !authorization
+                .startsWith(
+                    "Bearer "
+                )
         ) {
 
             return res
@@ -182,21 +261,20 @@ module.exports = async function handler(req, res) {
         }
 
 
-
-        /* =================================================
-           GET ACCESS TOKEN
-        ================================================= */
-
         const accessToken =
             authorization
+
                 .replace(
                     "Bearer ",
                     ""
                 )
+
                 .trim();
 
 
-        if (!accessToken) {
+        if (
+            !accessToken
+        ) {
 
             return res
                 .status(401)
@@ -212,14 +290,20 @@ module.exports = async function handler(req, res) {
 
 
         /* =================================================
-           VERIFY SUPABASE USER
+           VERIFY USER
         ================================================= */
 
         const {
-            data: userData,
-            error: userError
+            data:
+            userData,
+
+            error:
+            userError
+
         } =
-            await supabaseAdmin.auth
+
+            await supabaseAdmin
+                .auth
                 .getUser(
                     accessToken
                 );
@@ -231,7 +315,7 @@ module.exports = async function handler(req, res) {
         ) {
 
             console.error(
-                "Supabase auth error:",
+                "User verification failed:",
                 userError
             );
 
@@ -254,23 +338,48 @@ module.exports = async function handler(req, res) {
 
 
         /* =================================================
-           GET BODY
+           READ BODY
         ================================================= */
 
-        const body =
-            typeof req.body === "string"
-                ? JSON.parse(req.body)
-                : req.body || {};
+        let body = {};
 
 
-        const planKey =
-            body.plan;
+        try {
+
+            body =
+                typeof req.body ===
+                "string"
+
+                    ? JSON.parse(
+                        req.body
+                    )
+
+                    : req.body || {};
+
+        } catch (
+            parseError
+        ) {
+
+            return res
+                .status(400)
+                .json({
+
+                    message:
+                        "Invalid request body."
+
+                });
+
+        }
 
 
 
         /* =================================================
            VALIDATE PLAN
         ================================================= */
+
+        const planKey =
+            body.plan;
+
 
         if (
             !planKey ||
@@ -290,19 +399,67 @@ module.exports = async function handler(req, res) {
 
 
         const selectedPlan =
-            PLANS[planKey];
+            PLANS[
+                planKey
+            ];
 
 
 
         /* =================================================
-           USER EMAIL
+           CHECK EXISTING PREMIUM
+        ================================================= */
+
+        const {
+            data:
+            profile,
+
+            error:
+            profileError
+
+        } =
+
+            await supabaseAdmin
+
+                .from(
+                    "profiles"
+                )
+
+                .select(
+                    "full_name, plan, premium_until"
+                )
+
+                .eq(
+                    "id",
+                    user.id
+                )
+
+                .maybeSingle();
+
+
+        if (
+            profileError
+        ) {
+
+            console.error(
+                "Profile lookup error:",
+                profileError
+            );
+
+        }
+
+
+
+        /* =================================================
+           CUSTOMER DATA
         ================================================= */
 
         const customerEmail =
             user.email;
 
 
-        if (!customerEmail) {
+        if (
+            !customerEmail
+        ) {
 
             return res
                 .status(400)
@@ -316,68 +473,32 @@ module.exports = async function handler(req, res) {
         }
 
 
+        const customerName =
 
-        /* =================================================
-           USER NAME
-        ================================================= */
+            profile?.full_name ||
 
-        let customerName =
             user.user_metadata
                 ?.full_name ||
+
             user.user_metadata
                 ?.name ||
+
             "Enginex User";
 
 
-        try {
-
-            const {
-                data: profile
-            } =
-                await supabaseAdmin
-
-                    .from("profiles")
-
-                    .select(
-                        "full_name"
-                    )
-
-                    .eq(
-                        "id",
-                        user.id
-                    )
-
-                    .maybeSingle();
-
-
-            if (
-                profile?.full_name
-            ) {
-
-                customerName =
-                    profile.full_name;
-
-            }
-
-        } catch (profileError) {
-
-            console.warn(
-                "Profile name lookup failed:",
-                profileError
-            );
-
-        }
-
-
 
         /* =================================================
-           GENERATE UNIQUE ORDER ID
+           ORDER ID
         ================================================= */
 
         const randomPart =
             crypto
-                .randomBytes(5)
-                .toString("hex");
+
+                .randomBytes(4)
+
+                .toString(
+                    "hex"
+                );
 
 
         const timestamp =
@@ -385,18 +506,54 @@ module.exports = async function handler(req, res) {
 
 
         const orderId =
-            `ENGINEX-${planKey}-${timestamp}-${randomPart}`;
 
-
-        /*
-            Midtrans order ID maximum is limited,
-            so keep it reasonably short.
-        */
+            `ENG-${planKey}-${timestamp}-${randomPart}`;
 
 
 
         /* =================================================
-           MIDTRANS REQUEST BODY
+           MIDTRANS ENVIRONMENT
+        ================================================= */
+
+        const isProduction =
+
+            String(
+                process.env
+                    .MIDTRANS_IS_PRODUCTION
+            )
+                .toLowerCase() ===
+            "true";
+
+
+        const midtransUrl =
+
+            isProduction
+
+                ? "https://app.midtrans.com/snap/v1/transactions"
+
+                : "https://app.sandbox.midtrans.com/snap/v1/transactions";
+
+
+
+        /* =================================================
+           BASIC AUTH
+        ================================================= */
+
+        const basicAuth =
+            Buffer
+
+                .from(
+                    `${process.env.MIDTRANS_SERVER_KEY}:`
+                )
+
+                .toString(
+                    "base64"
+                );
+
+
+
+        /* =================================================
+           MIDTRANS PAYLOAD
         ================================================= */
 
         const midtransPayload = {
@@ -448,61 +605,26 @@ module.exports = async function handler(req, res) {
                 user.id,
 
             custom_field2:
-                planKey
+                planKey,
+
+            custom_field3:
+                String(
+                    selectedPlan.days
+                )
 
         };
 
 
 
         /* =================================================
-           MIDTRANS BASIC AUTH
-        ================================================= */
-
-        const midtransAuthorization =
-            Buffer
-                .from(
-                    `${process.env.MIDTRANS_SERVER_KEY}:`
-                )
-                .toString(
-                    "base64"
-                );
-
-
-
-        /* =================================================
-           ENVIRONMENT
-        ================================================= */
-
-        /*
-            Default = sandbox.
-
-            Jika nanti sudah production,
-            tambahkan Environment Variable:
-
-            MIDTRANS_IS_PRODUCTION=true
-        */
-
-        const isProduction =
-            process.env.MIDTRANS_IS_PRODUCTION ===
-            "true";
-
-
-        const midtransUrl =
-            isProduction
-
-                ? "https://app.midtrans.com/snap/v1/transactions"
-
-                : "https://app.sandbox.midtrans.com/snap/v1/transactions";
-
-
-
-        /* =================================================
-           CREATE SNAP TRANSACTION
+           CREATE MIDTRANS TRANSACTION
         ================================================= */
 
         const midtransResponse =
             await fetch(
+
                 midtransUrl,
+
                 {
 
                     method:
@@ -517,7 +639,7 @@ module.exports = async function handler(req, res) {
                             "application/json",
 
                         "Authorization":
-                            `Basic ${midtransAuthorization}`
+                            `Basic ${basicAuth}`
 
                     },
 
@@ -527,34 +649,37 @@ module.exports = async function handler(req, res) {
                         )
 
                 }
+
             );
 
 
 
-        /* =================================================
-           READ MIDTRANS RESPONSE
-        ================================================= */
-
         const midtransText =
-            await midtransResponse.text();
+            await midtransResponse
+                .text();
 
 
-        let midtransData = {};
+        let midtransData =
+            {};
 
 
         try {
 
             midtransData =
                 midtransText
+
                     ? JSON.parse(
                         midtransText
                     )
+
                     : {};
 
-        } catch (parseError) {
+        } catch (
+            parseError
+        ) {
 
             console.error(
-                "Invalid Midtrans JSON:",
+                "Midtrans response is not valid JSON:",
                 midtransText
             );
 
@@ -566,32 +691,27 @@ module.exports = async function handler(req, res) {
            MIDTRANS ERROR
         ================================================= */
 
-        if (!midtransResponse.ok) {
+        if (
+            !midtransResponse.ok
+        ) {
 
             console.error(
                 "Midtrans error:",
                 midtransResponse.status,
-                midtransData,
-                midtransText
+                midtransData
             );
 
 
             return res
-                .status(
-                    midtransResponse.status >= 400 &&
-                    midtransResponse.status < 600
-
-                        ? midtransResponse.status
-
-                        : 500
-                )
+                .status(502)
                 .json({
 
                     message:
-                        "Failed to create Midtrans transaction.",
+                        "Failed to create payment transaction.",
 
-                    midtrans_error:
-                        midtransData
+                    midtrans_status:
+                        midtransResponse
+                            .status
 
                 });
 
@@ -600,7 +720,7 @@ module.exports = async function handler(req, res) {
 
 
         /* =================================================
-           VALIDATE MIDTRANS TOKEN
+           VALIDATE MIDTRANS RESPONSE
         ================================================= */
 
         if (
@@ -618,7 +738,7 @@ module.exports = async function handler(req, res) {
                 .json({
 
                     message:
-                        "Midtrans payment token unavailable."
+                        "Payment token unavailable."
 
                 });
 
@@ -627,78 +747,99 @@ module.exports = async function handler(req, res) {
 
 
         /* =================================================
-           SAVE TRANSACTION TO SUPABASE
+           SAVE PAYMENT TO SUPABASE
         ================================================= */
 
         /*
-            Ini opsional tetapi sangat disarankan.
+            Ini WAJIB berhasil.
 
-            Buat tabel "payments" nanti untuk
-            menyimpan transaksi.
+            Webhook membutuhkan order_id ini
+            untuk mengaktifkan Premium.
         */
 
-        try {
+        const {
+            error:
+            paymentInsertError
 
-            const {
-                error: paymentInsertError
-            } =
-                await supabaseAdmin
+        } =
 
-                    .from("payments")
+            await supabaseAdmin
 
-                    .insert({
+                .from(
+                    "payments"
+                )
 
-                        user_id:
-                            user.id,
+                .insert({
 
-                        order_id:
-                            orderId,
+                    user_id:
+                        user.id,
 
-                        plan:
-                            planKey,
+                    order_id:
+                        orderId,
 
-                        amount:
-                            selectedPlan.amount,
+                    plan:
+                        planKey,
 
-                        status:
-                            "pending",
+                    amount:
+                        selectedPlan.amount,
 
-                        snap_token:
-                            midtransData.token,
+                    duration_days:
+                        selectedPlan.days,
 
-                        redirect_url:
-                            midtransData.redirect_url || null
+                    status:
+                        "pending",
 
-                    });
+                    transaction_status:
+                        "pending",
+
+                    snap_token:
+                        midtransData.token,
+
+                    redirect_url:
+                        midtransData
+                            .redirect_url ||
+                        null,
+
+                    premium_activated:
+                        false
+
+                });
 
 
-            if (paymentInsertError) {
+        if (
+            paymentInsertError
+        ) {
 
-                /*
-                    Payment tetap boleh lanjut walaupun
-                    tabel payments belum dibuat.
-                */
-
-                console.warn(
-                    "Payment database insert failed:",
-                    paymentInsertError
-                );
-
-            }
-
-        } catch (paymentDatabaseError) {
-
-            console.warn(
-                "Payment database error:",
-                paymentDatabaseError
+            console.error(
+                "Payment database insert failed:",
+                paymentInsertError
             );
+
+
+            /*
+                Jangan kirim Snap token ke frontend
+                kalau transaksi belum tersimpan.
+
+                Jika token diberikan tetapi database
+                tidak punya order_id, webhook tidak
+                bisa mengaktifkan Premium.
+            */
+
+            return res
+                .status(500)
+                .json({
+
+                    message:
+                        "Unable to save payment transaction."
+
+                });
 
         }
 
 
 
         /* =================================================
-           SUCCESS RESPONSE
+           SUCCESS
         ================================================= */
 
         return res
@@ -711,8 +852,13 @@ module.exports = async function handler(req, res) {
                 token:
                     midtransData.token,
 
+                snap_token:
+                    midtransData.token,
+
                 redirect_url:
-                    midtransData.redirect_url || null,
+                    midtransData
+                        .redirect_url ||
+                    null,
 
                 order_id:
                     orderId,
@@ -721,16 +867,26 @@ module.exports = async function handler(req, res) {
                     planKey,
 
                 amount:
-                    selectedPlan.amount
+                    selectedPlan.amount,
+
+                duration_days:
+                    selectedPlan.days,
+
+                environment:
+                    isProduction
+                        ? "production"
+                        : "sandbox"
 
             });
 
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
 
         /* =================================================
-           SERVER ERROR
+           UNKNOWN SERVER ERROR
         ================================================= */
 
         console.error(
@@ -744,15 +900,7 @@ module.exports = async function handler(req, res) {
             .json({
 
                 message:
-                    "Internal server error.",
-
-                error:
-                    process.env.NODE_ENV ===
-                    "development"
-
-                        ? error.message
-
-                        : undefined
+                    "Internal server error."
 
             });
 
